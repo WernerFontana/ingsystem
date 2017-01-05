@@ -1,5 +1,6 @@
 package engine.impl;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.PriorityQueue;
 
@@ -12,6 +13,7 @@ public class BasicSimEngine implements ISimEngine {
 	
 	private PriorityQueue<ISimEvent<?>> eventQueue;
 	private LocalDateTime currentTime;
+	private Duration simuDuration;
 	private LoggerHub loggerHub;
 	
 	public BasicSimEngine() {
@@ -20,10 +22,10 @@ public class BasicSimEngine implements ISimEngine {
 	}
 	
 	@Override
-	public void initialize(LocalDateTime date) {
+	public void initialize(LocalDateTime date, Duration s) {
 		eventQueue.clear();
 		currentTime = date;
-		
+		simuDuration = s;
 	}
 	
 	@Override
@@ -65,6 +67,10 @@ public class BasicSimEngine implements ISimEngine {
 		this.getLoggerHub().setComment(message);
 		this.getLoggerHub().log();
 		this.getLoggerHub().clear();
+	}
+	
+	public Duration getSimuDuration(){
+		return simuDuration;
 	}
 
 }

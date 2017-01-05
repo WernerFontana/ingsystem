@@ -11,7 +11,7 @@ import logger.impl.LoggerHub;
 
 public interface ISimEngine {
 	
-	public void initialize(LocalDateTime date);
+	public void initialize(LocalDateTime date, Duration s);
 	public LocalDateTime getCurrentTime();
 	public boolean scheduleEvent(ISimEvent<?> event);
 	public boolean processNextEvent();
