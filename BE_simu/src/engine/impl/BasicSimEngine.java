@@ -57,6 +57,7 @@ public class BasicSimEngine implements ISimEngine {
 		return loggerHub;
 	}
 	
+	@Override
 	public void log(ISimEntity entity, String message) {
 		this.getLoggerHub().setSpace(this.getClass().getPackage().toString());
 		this.getLoggerHub().setTime(this.getCurrentTime());

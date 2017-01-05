@@ -53,22 +53,6 @@ public class Monitor {
 		CrossBuilder cb= new CrossBuilder(bdd,env,engine);
 		LaneBuilder lb= new LaneBuilder(bdd,env);
 		
-		env.addNode(new Cross(engine,true,8));
-		env.addNode(new Cross(engine,true,9));
-		env.addNode(new Cross(engine,true,10));
-		env.addNode(new Cross(engine,true,11));
-		env.addNode(new Frontier(engine,1));
-		env.addNode(new Frontier(engine,2));
-		env.addNode(new Frontier(engine,3));
-		env.addNode(new Frontier(engine,4));
-		env.addNode(new Frontier(engine,5));
-		env.addNode(new Frontier(engine,6));
-		env.addNode(new Frontier(engine,7));
-		
-		for(Lane lane : Lane.values()){
-			env.addLine(new Line(lane.getID(),lane.getLongueur(),env.getNode(lane.getBegin()),env.getNode(lane.getEnd())));
-		}
-		
 		engine.processEventsUntil(startTime.plus(duration));
 		engine.getLoggerHub().terminate();
 		

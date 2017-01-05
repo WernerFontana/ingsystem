@@ -16,6 +16,7 @@ public interface ISimEngine {
 	public boolean scheduleEvent(ISimEvent<?> event);
 	public boolean processNextEvent();
 	public LoggerHub getLoggerHub();
+	public void log(ISimEntity entity, String message);
 	
 	// Utilities
 	
