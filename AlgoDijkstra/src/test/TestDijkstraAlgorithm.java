@@ -18,7 +18,7 @@ public class TestDijkstraAlgorithm {
 
 	public static void main(String[] args) {
 		TestDijkstraAlgorithm tda = new TestDijkstraAlgorithm();
-		tda.testExcute();
+		tda.testExcute(1,3);
 	}
 
 	public void addLocation(String nodeName)
@@ -26,7 +26,7 @@ public class TestDijkstraAlgorithm {
 		Vertex location = new Vertex(nodeName, nodeName);
 		nodes.add(location); 
 	}
-	public void testExcute() {
+	public LinkedList<IVertex> testExcute(int begin, int end) {
 		nodes = new ArrayList<IVertex>();
 		edges = new ArrayList<IEdge>();
 		for(LaneNode route: LaneNode.values())
@@ -41,12 +41,16 @@ public class TestDijkstraAlgorithm {
 		// Lets check from location Loc_1 to Loc_10
 		Graph graph = new Graph(nodes, edges);
 		DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
-		dijkstra.execute(nodes.get(1));
-		LinkedList<IVertex> path = dijkstra.getNodePath(nodes.get(6));
-
+		dijkstra.execute(nodes.get(begin));
+		LinkedList<IVertex> path = dijkstra.getNodePath(nodes.get(end));
+		LinkedList<Integer> pathId = new LinkedList<Integer>();
+		
 		for (IVertex vertex : path) {
-			System.out.println(vertex);
+			//pathId.add(vertex.getId());
+			System.out.println(vertex.getId());
 		}
+		
+		return path;
 
 	}
 

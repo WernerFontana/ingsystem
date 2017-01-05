@@ -1,8 +1,7 @@
 package entity;
 
-import java.util.HashMap;
-
 import engine.ISimEntity;
+import engine.impl.BasicSimEngine;
 
 public class Cross extends Node implements ISimEntity {
 
@@ -10,8 +9,8 @@ public class Cross extends Node implements ISimEntity {
 	boolean rule;
 	public final boolean STOP = true, FEU = false;
 	
-	public Cross (boolean r, int i) {
-		super(i);
+	public Cross (BasicSimEngine engine, boolean r, int i) {
+		super(engine, i);
 		isOccupied[0] = null;
 		isOccupied[1] = null;
 		isOccupied[2] = null;

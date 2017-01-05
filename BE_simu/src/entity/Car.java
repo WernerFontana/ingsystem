@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import engine.ISimEntity;
 
-public class Car  implements ISimEntity {
+public class Car implements ISimEntity {
 	
 	public double longueur;
 	public double distSecu;

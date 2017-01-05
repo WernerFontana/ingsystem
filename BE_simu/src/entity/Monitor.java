@@ -37,35 +37,35 @@ public class Monitor {
 		engine.processEventsUntil(startTime.plus(duration));
 		engine.getLoggerHub().terminate();*/
 		
+		BasicSimEngine engine = new BasicSimEngine();
+		final LocalDateTime startTime = LocalDateTime.of(2017, 1, 1, 1, 0);
+		final Duration duration = Duration.ofHours(6);
+		
+		
+		engine.getLoggerHub().addLogger(new SysOutLogger());
+		engine.initialize(startTime);
+		
 		DataManager bdd = new DataManager();
 		System.out.println(((JSONObject)bdd.getFrontier().get(0)).get("id"));
 		
 		Environment env = new Environment();
 		
-		env.addNode(new Cross(true,8));
-		env.addNode(new Cross(true,9));
-		env.addNode(new Cross(true,10));
-		env.addNode(new Cross(true,11));
-		env.addNode(new Frontier(1));
-		env.addNode(new Frontier(2));
-		env.addNode(new Frontier(3));
-		env.addNode(new Frontier(4));
-		env.addNode(new Frontier(5));
-		env.addNode(new Frontier(6));
-		env.addNode(new Frontier(7));
+		env.addNode(new Cross(engine,true,8));
+		env.addNode(new Cross(engine,true,9));
+		env.addNode(new Cross(engine,true,10));
+		env.addNode(new Cross(engine,true,11));
+		env.addNode(new Frontier(engine,1));
+		env.addNode(new Frontier(engine,2));
+		env.addNode(new Frontier(engine,3));
+		env.addNode(new Frontier(engine,4));
+		env.addNode(new Frontier(engine,5));
+		env.addNode(new Frontier(engine,6));
+		env.addNode(new Frontier(engine,7));
 		
 		for(Lane lane : Lane.values()){
 			env.addLine(new Line(lane.getID(),lane.getLongueur(),env.getNode(lane.getBegin()),env.getNode(lane.getEnd())));
 		}
 		
-		
-		
-		final LocalDateTime startTime = LocalDateTime.of(0, 1, 1, 0, 0);
-		final Duration duration = Duration.ofHours(6);
-		
-		BasicSimEngine engine = new BasicSimEngine();
-		engine.getLoggerHub().addLogger(new SysOutLogger());
-		engine.initialize(startTime);
 		
 		engine.processEventsUntil(startTime.plus(duration));
 		engine.getLoggerHub().terminate();
