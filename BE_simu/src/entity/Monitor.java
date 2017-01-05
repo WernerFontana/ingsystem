@@ -39,8 +39,8 @@ public class Monitor {
 		engine.getLoggerHub().terminate();*/
 		
 		BasicSimEngine engine = new BasicSimEngine();
-		final LocalDateTime startTime = LocalDateTime.of(2017, 1, 1, 1, 0);
-		final Duration duration = Duration.ofHours(6);
+		final LocalDateTime startTime = LocalDateTime.of(2017, 1, 1, 15, 0);
+		final Duration duration = Duration.ofHours(24);
 		
 		
 		engine.getLoggerHub().addLogger(new SysOutLogger());
