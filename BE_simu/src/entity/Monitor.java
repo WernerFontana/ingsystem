@@ -4,9 +4,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Random;
 
-import org.json.JSONObject;
-
-import config.DataManager;
 import config.Prop;
 import data.Lane;
 import engine.impl.BasicSimEngine;
@@ -36,9 +33,6 @@ public class Monitor {
 		
 		engine.processEventsUntil(startTime.plus(duration));
 		engine.getLoggerHub().terminate();*/
-		
-		DataManager bdd = new DataManager();
-		System.out.println(((JSONObject)bdd.getFrontier().get(0)).get("id"));
 		
 		Environment env = new Environment();
 		
