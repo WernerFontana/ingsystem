@@ -14,7 +14,8 @@ public class Frontier extends Node implements ISimEntity {
 	private LinkedList<LocalDateTime> rawTime = new LinkedList<LocalDateTime>();
 	//Contient le nombre de voiture a spawn pour chaque plage
 	private LinkedList<Integer> rawNum = new LinkedList<Integer>();
-
+	private double longueur = 4.5;
+	private double distSecu = 0.5;
 
 	public Frontier(BasicSimEngine engine, int ID) {
 		super(engine, ID);
@@ -33,13 +34,6 @@ public class Frontier extends Node implements ISimEntity {
 
 
 		generation();
-	}
-
-	public void addRawTime(LocalDateTime l){
-		rawTime.add(l);
-	}
-	public void addRawNum(int i){
-		rawNum.add(i);
 	}
 
 	public void generation(){
@@ -81,11 +75,33 @@ public class Frontier extends Node implements ISimEntity {
 	}
 
 
-	public void genCar(ISimEngine engine){
+	private void genCar(ISimEngine engine){
 		engine.log(this, "generation d'une voiture");
-
+		if(lines != null)
+			lines.forEach((id,l) -> l.addCar(new Car(1, longueur, distSecu, this)));
+		else
+			engine.log(this, "pas de line connectée");
 	}
 
-
+	
+	
+	public void setLongueur(double l){
+		longueur = l;
+	}
+	public void setDistSecu(double d){
+		distSecu = d;
+	}
+	public void addRawTime(LocalDateTime l){
+		rawTime.add(l);
+	}
+	public void addRawNum(int i){
+		rawNum.add(i);
+	}
+	public void addLine(int id, Line l){
+		if(lines.isEmpty())
+			lines.put(id, l);
+		else
+			engine.log(this, ">>>>>>>>>>>>>>Problème d'ajout de line pour Frontier");
+	}
 
 }

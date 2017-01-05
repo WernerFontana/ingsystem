@@ -6,7 +6,7 @@ import engine.ISimEngine;
 import engine.impl.BasicSimEngine;
 
 public class Node {
-	private HashMap<Integer, Line> lines;
+	protected HashMap<Integer, Line> lines;
 	private int ID;
 	protected BasicSimEngine engine;
 	
@@ -19,4 +19,5 @@ public class Node {
 	public int getID(){
 		return ID;
 	}
+	
 }

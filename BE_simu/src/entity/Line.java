@@ -41,6 +41,9 @@ public class Line  implements ISimEntity {
 	public void setCars(LinkedList<Car> cars) {
 		this.cars = cars;
 	}
+	public void addCar(Car c){
+		cars.add(c);
+	}
 
 	public int getID() {
 		return ID;
