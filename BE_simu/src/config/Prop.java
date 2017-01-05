@@ -15,7 +15,7 @@ public class Prop {
 	private InputStream input = null;
 
 	public Prop(){
-		try {
+		/*try {
 			prop = new Properties();
 			input = new FileInputStream("config.properties");
 
@@ -23,11 +23,11 @@ public class Prop {
 			prop.load(input);
 
 			// get the property value and print it out
-			System.out.println(prop.getProperty("p1.ID"));			
+			System.out.println(prop.getProperty("r.1.1.1.ID"));			
 
 		} catch (final IOException ex) {
 			ex.printStackTrace();
-		}
+		}*/
 	}
 	
 	
