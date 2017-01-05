@@ -11,26 +11,23 @@ public class Prop {
 
 	public static Prop self = new Prop();
 
-	public static final Properties prop = new Properties();
-	InputStream input = null;
+	public Properties prop;
+	private InputStream input = null;
 
 	public Prop(){
-		/*try {
-
-			input = new FileInputStream("config/config.properties");
+		try {
+			prop = new Properties();
+			input = new FileInputStream("config.properties");
 
 			// load a properties file
 			prop.load(input);
 
 			// get the property value and print it out
-			/*System.out.println(prop.getProperty("db.url"));
-			System.out.println(prop.getProperty("db.username "));
-			System.out.println(prop.getProperty("db.password "));
-			
+			System.out.println(prop.getProperty("p1.ID"));			
 
 		} catch (final IOException ex) {
 			ex.printStackTrace();
-		} */
+		}
 	}
 	
 	
