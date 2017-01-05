@@ -3,6 +3,7 @@ package config;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 
 import org.json.JSONArray;
@@ -35,15 +36,26 @@ public class DataManager {
 		return bdd.getJSONArray("frontier");
 	}
 	
-	public int getFreq(int idFront, int idHor) {
-		/* idHor : 0h-7h -> 0
-		 * 		   7h-9h -> 1
-		 * 		   9h-17h -> 2
-		 * 		   17h-19h -> 3
-		 * 		   19h-0h -> 4
-		 */
+	public LocalDateTime[] getHours() {
+		int k = bdd.getJSONArray("horaires").length();
+		LocalDateTime[] hours = new LocalDateTime[k];
+		int h;
+		for (int i = 0; i < k; i++) {
+			h = bdd.getJSONArray("horaires").getInt(i);
+			hours[i] = LocalDateTime.of(2017, 1, 1, h, 0);
+		}
 		
-		return bdd.getJSONArray("frequence").getJSONArray(idFront-1).getInt(idHor);
+		return hours;
+	}
+	
+	public int[] getFreq(int idFront) {
+		int k = bdd.getJSONArray("frequence").getJSONArray(idFront).length();
+		int[] freq = new int[k];
+		for (int i = 0; i < k; i++) {
+			freq[i] = bdd.getJSONArray("frequence").getJSONArray(idFront).getInt(i);
+		}
+		
+		return freq;
 	}
 	
 	public int getAttract(int idSource, int idCible) {
