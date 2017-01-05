@@ -18,7 +18,6 @@ public class LaneBuilder {
 		   for (int i=0;i<len;i++){ 
 			   Line l=new Line((Integer) bdd.getLaneItem("id", i),Double.valueOf((Integer)bdd.getLaneItem("longueur", i)),env.getNode((Integer) bdd.getLaneItem("id", i)),env.getNode((Integer) bdd.getLaneItem("id", i)));
 		  env.addLine(l);
-		   System.out.println(bdd.getLaneItem("id", i)+", "+bdd.getLaneItem("longueur", i));
 		   } 
 		} 
 	}

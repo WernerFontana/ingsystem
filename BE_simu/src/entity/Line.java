@@ -8,11 +8,16 @@ public class Line  implements ISimEntity {
 
 	private LinkedList<Car> cars;
 	private double longueur;
+	public double getLongueur() {
+		return longueur;
+	}
+
 	public final double largeur = 3;
 	private Node begin, end;
 	private int ID;
 	
-	public Line(int ID, double longeur, Node begin, Node end){
+	public Line(int ID, double longueur, Node begin, Node end){
+		this.ID=ID;
 		this.longueur = longueur;
 		this.begin = begin;
 		this.end = end;

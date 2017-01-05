@@ -49,8 +49,8 @@ public class Monitor {
 		DataManager bdd = new DataManager();
 		
 		Environment env = new Environment();
-		FrontierBuilder fb= new FrontierBuilder(bdd,env);
-		CrossBuilder cb= new CrossBuilder(bdd,env);
+		FrontierBuilder fb= new FrontierBuilder(bdd,env,engine);
+		CrossBuilder cb= new CrossBuilder(bdd,env,engine);
 		LaneBuilder lb= new LaneBuilder(bdd,env);
 		
 		env.addNode(new Cross(engine,true,8));
