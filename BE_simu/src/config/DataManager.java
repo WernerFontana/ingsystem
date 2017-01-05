@@ -49,10 +49,10 @@ public class DataManager {
 	}
 	
 	public int[] getFreq(int idFront) {
-		int k = bdd.getJSONArray("frequence").getJSONArray(idFront).length();
+		int k = bdd.getJSONArray("frequence").getJSONArray(idFront-1).length();
 		int[] freq = new int[k];
 		for (int i = 0; i < k; i++) {
-			freq[i] = bdd.getJSONArray("frequence").getJSONArray(idFront).getInt(i);
+			freq[i] = bdd.getJSONArray("frequence").getJSONArray(idFront-1).getInt(i);
 		}
 		
 		return freq;
