@@ -4,8 +4,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Random;
 
-import org.json.JSONObject;
-
+import Initializer.CrossBuilder;
+import Initializer.FrontierBuilder;
+import Initializer.LaneBuilder;
 import config.DataManager;
 import config.Prop;
 import data.Lane;
@@ -46,9 +47,11 @@ public class Monitor {
 		engine.initialize(startTime);
 		
 		DataManager bdd = new DataManager();
-		System.out.println(((JSONObject)bdd.getFrontier().get(0)).get("id"));
 		
 		Environment env = new Environment();
+		FrontierBuilder fb= new FrontierBuilder(bdd,env);
+		CrossBuilder cb= new CrossBuilder(bdd,env);
+		LaneBuilder lb= new LaneBuilder(bdd,env);
 		
 		env.addNode(new Cross(engine,true,8));
 		env.addNode(new Cross(engine,true,9));
@@ -65,7 +68,6 @@ public class Monitor {
 		for(Lane lane : Lane.values()){
 			env.addLine(new Line(lane.getID(),lane.getLongueur(),env.getNode(lane.getBegin()),env.getNode(lane.getEnd())));
 		}
-		
 		
 		engine.processEventsUntil(startTime.plus(duration));
 		engine.getLoggerHub().terminate();
