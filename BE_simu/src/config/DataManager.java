@@ -22,7 +22,14 @@ public class DataManager {
 		}
 	}
 	
+	public JSONArray getLanes(){
+		return bdd.getJSONArray("line");
+	}
 	
+	public Object getLaneItem(String type, int id)
+	{
+		return ((JSONObject) getLanes().get(id)).get(type);
+	}
 	
 	public JSONArray getFrontier(){
 		return bdd.getJSONArray("frontier");

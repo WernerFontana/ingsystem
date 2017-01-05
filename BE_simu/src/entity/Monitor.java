@@ -4,6 +4,10 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Random;
 
+import Initializer.CrossBuilder;
+import Initializer.FrontierBuilder;
+import Initializer.LaneBuilder;
+import config.DataManager;
 import config.Prop;
 import data.Lane;
 import engine.impl.BasicSimEngine;
@@ -33,26 +37,14 @@ public class Monitor {
 		
 		engine.processEventsUntil(startTime.plus(duration));
 		engine.getLoggerHub().terminate();*/
+		DataManager bdd = new DataManager();
 		
 		Environment env = new Environment();
+		FrontierBuilder fb= new FrontierBuilder(bdd,env);
+		CrossBuilder cb= new CrossBuilder(bdd,env);
+		LaneBuilder lb= new LaneBuilder(bdd,env);
 		
-		env.addNode(new Cross(true,8));
-		env.addNode(new Cross(true,9));
-		env.addNode(new Cross(true,10));
-		env.addNode(new Cross(true,11));
-		env.addNode(new Frontier(1));
-		env.addNode(new Frontier(2));
-		env.addNode(new Frontier(3));
-		env.addNode(new Frontier(4));
-		env.addNode(new Frontier(5));
-		env.addNode(new Frontier(6));
-		env.addNode(new Frontier(7));
-		
-		for(Lane lane : Lane.values()){
-			env.addLine(new Line(lane.getID(),lane.getLongueur(),env.getNode(lane.getBegin()),env.getNode(lane.getEnd())));
-		}
-		
-		
+		System.out.println(env.getLine(10).getID());
 		
 		final LocalDateTime startTime = LocalDateTime.of(0, 1, 1, 0, 0);
 		final Duration duration = Duration.ofHours(6);
