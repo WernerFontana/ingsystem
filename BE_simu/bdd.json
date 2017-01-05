@@ -21,7 +21,13 @@
 			"end" : 1,
 			"longueur" : 1;
 		}
-	]
+	],
+	
+	"car":
+	{
+		"longueur" : 4.5,
+		"distSecu" : 0.5;
+	}
 
 
 
