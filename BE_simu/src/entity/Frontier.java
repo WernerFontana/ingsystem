@@ -2,8 +2,10 @@ package entity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.LinkedList;
 
+import algo.algo.PathFinder;
 import engine.ISimEngine;
 import engine.ISimEntity;
 import engine.impl.BasicSimEngine;
@@ -14,8 +16,12 @@ public class Frontier extends Node implements ISimEntity {
 	private LinkedList<LocalDateTime> rawTime = new LinkedList<LocalDateTime>();
 	//Contient le nombre de voiture a spawn pour chaque plage
 	private LinkedList<Integer> rawNum = new LinkedList<Integer>();
+	//Contient l'id d'une frontier et la proba associé à celle-ci
+	private HashMap<Integer, Integer> rawProba = new HashMap<Integer, Integer>();
+	
 	private double longueur = 4.5;
 	private double distSecu = 0.5;
+	private PathFinder path;
 
 	public Frontier(BasicSimEngine engine, int ID) {
 		super(engine, ID);
@@ -102,6 +108,9 @@ public class Frontier extends Node implements ISimEntity {
 			lines.put(id, l);
 		else
 			engine.log(this, ">>>>>>>>>>>>>>Problème d'ajout de line pour Frontier");
+	}
+	public void setPathFinder(PathFinder p){
+		this.path = p;
 	}
 
 }

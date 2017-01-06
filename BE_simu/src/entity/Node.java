@@ -5,7 +5,7 @@ import java.util.HashMap;
 import engine.ISimEngine;
 import engine.impl.BasicSimEngine;
 
-public class Node {
+public abstract class Node {
 	protected HashMap<Integer, Line> lines;
 	private int ID;
 	protected BasicSimEngine engine;

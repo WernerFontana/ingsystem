@@ -23,6 +23,12 @@ public class Environment {
 	{
 		nodeList.put(node.getID(), node);
 	}
+	public HashMap<Integer,Line> getLines(){
+		return lineList;
+	}
+	public HashMap<Integer,Node> getNodes(){
+		return nodeList;
+	}
 	
 	public Line getLine(int id)
 	{

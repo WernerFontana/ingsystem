@@ -7,20 +7,20 @@ import engine.ISimEntity;
 public class Line  implements ISimEntity {
 
 	private LinkedList<Car> cars;
-	private double longueur;
-	public double getLongueur() {
-		return longueur;
-	}
-
+	private int longueur;
 	public final double largeur = 3;
 	private Node begin, end;
 	private int ID;
 	
-	public Line(int ID, double longueur, Node begin, Node end){
+	public Line(int ID, int longueur, Node begin, Node end){
 		this.ID=ID;
 		this.longueur = longueur;
 		this.begin = begin;
 		this.end = end;
+	}
+	
+	public void addCar(Car c){
+		cars.add(c);
 	}
 	
 	public boolean isFull(){
@@ -41,13 +41,17 @@ public class Line  implements ISimEntity {
 	public void setCars(LinkedList<Car> cars) {
 		this.cars = cars;
 	}
-	public void addCar(Car c){
-		cars.add(c);
-	}
-
 	public int getID() {
 		return ID;
 	}
-	
+	public Node getBegin(){
+		return begin;
+	}
+	public Node getEnd(){
+		return end;
+	}
+	public int getLongueur() {
+		return longueur;
+	}
 	
 }

@@ -7,9 +7,9 @@ import java.util.Random;
 import Initializer.CrossBuilder;
 import Initializer.FrontierBuilder;
 import Initializer.LaneBuilder;
+import algo.algo.PathFinder;
 import config.DataManager;
 import config.Prop;
-import data.Lane;
 import engine.impl.BasicSimEngine;
 import logger.impl.SysOutLogger;
 
@@ -19,24 +19,6 @@ public class Monitor {
 	
 	public static void main(String [] args) {
 		final Random rand = new Random(LocalDateTime.now().getNano());
-		
-		/*PingEntity ping = new PingEntity("Alice");
-		ping.setLatencySupplier(() -> Duration.ofMinutes(15));
-		PingEntity pong = new PingEntity("Bob");
-		pong.setLatencySupplier(() -> Duration.ofMinutes(5 + rand.nextInt(25)));
-		ping.setTarget(pong);
-		pong.setTarget(ping);
-		
-		final LocalDateTime startTime = LocalDateTime.of(0, 1, 1, 0, 0);
-		final Duration duration = Duration.ofHours(6);
-		
-		BasicSimEngine engine = new BasicSimEngine();
-		engine.getLoggerHub().addLogger(new SysOutLogger());
-		engine.initialize(startTime);
-		ping.sendPing(engine);
-		
-		engine.processEventsUntil(startTime.plus(duration));
-		engine.getLoggerHub().terminate();*/
 		
 		BasicSimEngine engine = new BasicSimEngine();
 		final LocalDateTime startTime = LocalDateTime.of(2017, 1, 1, 0, 0);
@@ -53,12 +35,34 @@ public class Monitor {
 		CrossBuilder cb= new CrossBuilder(bdd,env,engine);
 		LaneBuilder lb= new LaneBuilder(bdd,env);
 		
+		PathFinder path = new PathFinder();
+		initPathFinder(path,env);
+		
 		engine.processEventsUntil(startTime.plus(duration));
 		engine.getLoggerHub().terminate();
 		
 		//Fermeture du fichier de conf
 		Prop.self.close();
 		
+	}
+	
+	
+	private static void initPathFinder(PathFinder path, Environment env){
+		env.getLines().forEach(
+				(id,l) -> path.addLane(String.valueOf(id), l.getBegin().getID(), l.getEnd().getID(), l.getLongueur())
+				);
+		
+		env.getNodes().forEach(
+				(id,n) -> path.addLocation(String.valueOf(n.getID()))
+				);
+		//construction du graph
+		path.build();
+		//on affecte le pathFinder a chaque frontier
+		env.getNodes().forEach(
+				(id,n) -> {if(n instanceof Frontier){
+					((Frontier) n).setPathFinder(path);
+				}}
+				);
 	}
 	
 }
