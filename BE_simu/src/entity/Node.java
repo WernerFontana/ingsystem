@@ -2,22 +2,17 @@ package entity;
 
 import java.util.HashMap;
 
-import engine.ISimEngine;
 import engine.impl.BasicSimEngine;
 
-public abstract class Node {
+public abstract class Node extends Entity{
 	protected HashMap<Integer, Line> lines;
-	private int ID;
-	protected BasicSimEngine engine;
 	
-	public Node(BasicSimEngine engine, int ID)
+	
+	public Node(int ID, BasicSimEngine engine, Environment env)
 	{
-		this.ID=ID;
-		this.engine = engine;
+		super(ID,engine,env);
 	}
+
 	
-	public int getID(){
-		return ID;
-	}
 	
 }

@@ -2,8 +2,10 @@ package entity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Random;
 
 import algo.algo.PathFinder;
 import engine.ISimEngine;
@@ -17,14 +19,16 @@ public class Frontier extends Node implements ISimEntity {
 	//Contient le nombre de voiture a spawn pour chaque plage
 	private LinkedList<Integer> rawNum = new LinkedList<Integer>();
 	//Contient l'id d'une frontier et la proba associé à celle-ci
-	private HashMap<Integer, Integer> rawProba = new HashMap<Integer, Integer>();
+	private ArrayList<Integer> rawProba = new ArrayList<Integer>();
 	
 	private double longueur = 4.5;
 	private double distSecu = 0.5;
 	private PathFinder path;
+	private int dest = 0;
+	
 
-	public Frontier(BasicSimEngine engine, int ID) {
-		super(engine, ID);
+	public Frontier(int ID, BasicSimEngine engine, Environment e) {
+		super(ID, engine, e);
 		rawTime.add(LocalDateTime.of(2017, 1, 1, 0, 0));
 		rawTime.add(LocalDateTime.of(2017, 1, 1, 7, 0));
 		rawTime.add(LocalDateTime.of(2017, 1, 1, 9, 0));
@@ -37,6 +41,12 @@ public class Frontier extends Node implements ISimEntity {
 		rawNum.add(3);
 		rawNum.add(4);
 		rawNum.add(5);
+		
+		addProba(5);
+		addProba(50);
+		addProba(0);
+		addProba(25);
+		addProba(20);		
 
 
 		generation();
@@ -82,9 +92,21 @@ public class Frontier extends Node implements ISimEntity {
 
 
 	private void genCar(ISimEngine engine){
-		engine.log(this, "generation d'une voiture");
+		//engine.log(this, "generation d'une voiture");
+		
+		//generation de la destination
+		Random rand = new Random();
+		int d =rand.nextInt(100);
+		
+		for(int i = 0;i<rawProba.size();i++){
+			if(d <= rawProba.get(i)){
+				dest = i+1;
+				break;
+			}
+		}
+		
 		if(lines != null)
-			lines.forEach((id,l) -> l.addCar(new Car(1, longueur, distSecu, this)));
+			lines.forEach((id,l) -> l.addCar(new Car(1, this.engine, env, longueur, distSecu, this,(Frontier)env.getNode(dest))));
 		else
 			engine.log(this, "pas de line connectée");
 	}
@@ -111,6 +133,16 @@ public class Frontier extends Node implements ISimEntity {
 	}
 	public void setPathFinder(PathFinder p){
 		this.path = p;
+	}
+	/**
+	 * Proba a ajouter dans l'ordre en tenant compte de la proba 0 d'allersur soi-meme
+	 * @param p
+	 */
+	public void addProba(int p){
+		if(rawProba.isEmpty())
+			rawProba.add(p);
+		else
+			rawProba.add(rawProba.get(rawProba.size()-1)+p);
 	}
 
 }

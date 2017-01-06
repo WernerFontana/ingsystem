@@ -3,17 +3,17 @@ package entity;
 import java.util.LinkedList;
 
 import engine.ISimEntity;
+import engine.impl.BasicSimEngine;
 
-public class Line  implements ISimEntity {
+public class Line extends Entity implements ISimEntity {
 
 	private LinkedList<Car> cars;
 	private int longueur;
 	public final double largeur = 3;
 	private Node begin, end;
-	private int ID;
 	
-	public Line(int ID, int longueur, Node begin, Node end){
-		this.ID=ID;
+	public Line(int ID, BasicSimEngine engine, Environment env, int longueur, Node begin, Node end){
+		super(ID,engine,env);
 		this.longueur = longueur;
 		this.begin = begin;
 		this.end = end;
@@ -40,9 +40,6 @@ public class Line  implements ISimEntity {
 	}
 	public void setCars(LinkedList<Car> cars) {
 		this.cars = cars;
-	}
-	public int getID() {
-		return ID;
 	}
 	public Node getBegin(){
 		return begin;

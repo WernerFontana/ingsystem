@@ -1,10 +1,8 @@
 package algo.algo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import algo.engine.DijkstraAlgorithm;
 import algo.model.Edge;
@@ -17,9 +15,6 @@ import algo.model.Vertex;
 public class PathFinder {
 	private List<IVertex> nodes;
 	private List<IEdge> edges;
-	private Map<Integer,Integer> nodeID;
-	private Map<Integer,Integer> edgeID;
-	private int i1, i2;
 	
 	private DijkstraAlgorithm dijkstra;
 
@@ -31,9 +26,6 @@ public class PathFinder {
 	public PathFinder(){
 		nodes = new ArrayList<IVertex>();
 		edges = new ArrayList<IEdge>();
-		nodeID = new HashMap<Integer,Integer>();
-		edgeID = new HashMap<Integer,Integer>();
-		i1 = 0; i2 = 0;
 	}
 	
 	public void build(){
@@ -63,10 +55,7 @@ public class PathFinder {
 		edges.add(lane);
 	}
 	public void addLocation(String nodeName){
-		nodeID.put(i1, Integer.valueOf(nodeName));
-		i1++;
 		Vertex location = new Vertex(nodeName, nodeName);
 		nodes.add(location); 
-		System.out.println(i1);
 	}
 }
