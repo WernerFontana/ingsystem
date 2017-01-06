@@ -32,8 +32,12 @@ public class DataManager {
 		return ((JSONObject) getLanes().get(id)).get(type);
 	}
 	
-	public JSONArray getFrontier(){
+	public JSONArray getFrontiers(){
 		return bdd.getJSONArray("frontier");
+	}
+	
+	public JSONArray getCrosses(){
+		return bdd.getJSONArray("cross");
 	}
 	
 	public LocalDateTime[] getHours() {

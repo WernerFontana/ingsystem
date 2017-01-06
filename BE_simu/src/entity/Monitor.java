@@ -34,7 +34,7 @@ public class Monitor {
 		FrontierBuilder fb= new FrontierBuilder(bdd,env,engine);
 		CrossBuilder cb= new CrossBuilder(bdd,env,engine);
 		LaneBuilder lb= new LaneBuilder(bdd,env);
-		
+		System.out.println(env.getLines());
 		PathFinder path = new PathFinder();
 		initPathFinder(path,env);
 		
@@ -48,12 +48,14 @@ public class Monitor {
 	
 	
 	private static void initPathFinder(PathFinder path, Environment env){
-		env.getLines().forEach(
-				(id,l) -> path.addLane(String.valueOf(id), l.getBegin().getID(), l.getEnd().getID(), l.getLongueur())
-				);
-		
 		env.getNodes().forEach(
 				(id,n) -> path.addLocation(String.valueOf(n.getID()))
+				);
+		env.getLines().forEach(
+				(id,l) -> {
+					if(l.getBegin()==null){System.out.println("null"+ id);}
+					path.addLane(String.valueOf(id), l.getBegin().getID(), l.getEnd().getID(), l.getLongueur());
+				}
 				);
 		//construction du graph
 		path.build();

@@ -9,13 +9,13 @@ public class Cross extends Node implements ISimEntity {
 	boolean rule;
 	public final boolean STOP = true, FEU = false;
 	
-	public Cross (BasicSimEngine engine, boolean r, int i) {
-		super(engine, i);
+	public Cross (BasicSimEngine engine, boolean rule, int id) {
+		super(engine, id);
 		isOccupied[0] = null;
 		isOccupied[1] = null;
 		isOccupied[2] = null;
 		isOccupied[3] = null;
-		rule = r;
+		this.rule = rule;
 	}
 	
 	public Car getIsOccupied(int i) {

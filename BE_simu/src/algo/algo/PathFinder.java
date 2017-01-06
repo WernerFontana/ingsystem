@@ -1,8 +1,10 @@
 package algo.algo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import algo.engine.DijkstraAlgorithm;
 import algo.model.Edge;
@@ -15,23 +17,32 @@ import algo.model.Vertex;
 public class PathFinder {
 	private List<IVertex> nodes;
 	private List<IEdge> edges;
+	private Map<Integer,Integer> nodeID;
+	private Map<Integer,Integer> edgeID;
+	private int i1, i2;
+	
 	private DijkstraAlgorithm dijkstra;
 
 	public static void main(String[] args) {
 		PathFinder tda = new PathFinder();
-		tda.excute(1,3);
+		tda.execute(1,3);
+	}
+	
+	public PathFinder(){
+		nodes = new ArrayList<IVertex>();
+		edges = new ArrayList<IEdge>();
+		nodeID = new HashMap<Integer,Integer>();
+		edgeID = new HashMap<Integer,Integer>();
+		i1 = 0; i2 = 0;
 	}
 	
 	public void build(){
-		nodes = new ArrayList<IVertex>();
-		edges = new ArrayList<IEdge>();
-		
 		Graph graph = new Graph(nodes, edges);
 		dijkstra = new DijkstraAlgorithm(graph);
 	}
 
 	
-	public LinkedList<IVertex> excute(int begin, int end) {		
+	public LinkedList<IVertex> execute(int begin, int end) {		
 		dijkstra.execute(nodes.get(begin));
 		LinkedList<IVertex> path = dijkstra.getNodePath(nodes.get(end));
 		LinkedList<Integer> pathId = new LinkedList<Integer>();
@@ -44,16 +55,18 @@ public class PathFinder {
 		return path;
 	}
 
-	public void addLane(String laneId, int sourceLocNo, int destLocNo,	int duration) {
-		Edge lane = new Edge(laneId,nodes.get(sourceLocNo), nodes.get(destLocNo), duration);
+	public void addLane(String laneId, int sourceLocNo, int destLocNo, int duration) {
+		Edge lane = new Edge(laneId,nodes.get(sourceLocNo-1), nodes.get(destLocNo-1), duration);
 		edges.add(lane);
 
-		lane = new Edge(laneId+"rev",nodes.get(destLocNo), nodes.get(sourceLocNo),duration);
+		lane = new Edge(laneId+"rev",nodes.get(destLocNo-1), nodes.get(sourceLocNo-1),duration);
 		edges.add(lane);
 	}
-	public void addLocation(String nodeName)
-	{
+	public void addLocation(String nodeName){
+		nodeID.put(i1, Integer.valueOf(nodeName));
+		i1++;
 		Vertex location = new Vertex(nodeName, nodeName);
 		nodes.add(location); 
+		System.out.println(i1);
 	}
 }
