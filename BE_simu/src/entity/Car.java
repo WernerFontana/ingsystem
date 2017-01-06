@@ -19,11 +19,15 @@ public class Car extends Entity implements ISimEntity {
 		this.begin = begin;
 		this.end = end;
 		
-		
+		engine.log(this, "generation Car");
 	}
 	
 	private void findDestination(){
 		
+	}
+	
+	public String toString(){
+		return "Car("+this.getID()+") : "+begin.getID()+"->"+end.getID();
 	}
 
 }

@@ -11,6 +11,7 @@ public abstract class Node extends Entity{
 	public Node(int ID, BasicSimEngine engine, Environment env)
 	{
 		super(ID,engine,env);
+		lines = new HashMap<Integer, Line>();
 	}
 
 	

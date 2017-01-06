@@ -7,7 +7,7 @@ import engine.impl.BasicSimEngine;
 
 public class Line extends Entity implements ISimEntity {
 
-	private LinkedList<Car> cars;
+	private LinkedList<Car> cars = new LinkedList<Car>();
 	private int longueur;
 	public final double largeur = 3;
 	private Node begin, end;
