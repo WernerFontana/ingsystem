@@ -16,7 +16,11 @@ public class FrontierBuilder {
 			if (jsonArray != null) { 
 			   int len = jsonArray.length();
 			   for (int i=0;i<len;i++){ 
-				   env.addNode(new Frontier(((JSONObject)jsonArray.get(i)).getInt("id"),engine,env));
+				   Frontier f = new Frontier(((JSONObject)jsonArray.get(i)).getInt("id"),engine,env);
+				   //donne sur l'attractivite de chque frontier
+				   bdd.getAttract(f.getID()).forEach((p) -> f.addProba((Integer)p));
+				   
+				   env.addNode(f);
 			   } 
 			} 
 		}

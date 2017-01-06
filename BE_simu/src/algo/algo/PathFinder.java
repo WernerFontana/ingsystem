@@ -34,17 +34,16 @@ public class PathFinder {
 	}
 
 	
-	public LinkedList<IVertex> execute(int begin, int end) {		
+	public LinkedList<Integer> execute(int begin, int end) {		
 		dijkstra.execute(nodes.get(begin));
 		LinkedList<IVertex> path = dijkstra.getNodePath(nodes.get(end));
 		LinkedList<Integer> pathId = new LinkedList<Integer>();
 		
 		for (IVertex vertex : path) {
-			//pathId.add(vertex.getId());
-			System.out.println(vertex.getId());
+			pathId.add(Integer.valueOf(vertex.getId()));
 		}
 		
-		return path;
+		return pathId;
 	}
 
 	public void addLane(String laneId, int sourceLocNo, int destLocNo, int duration) {

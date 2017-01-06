@@ -35,8 +35,7 @@ public class Monitor {
 		CrossBuilder cb= new CrossBuilder(bdd,env,engine);
 		LaneBuilder lb= new LaneBuilder(bdd,engine, env);
 		
-		PathFinder path = new PathFinder();
-		initPathFinder(path,env);
+		initPathFinder(env);
 		
 		engine.processEventsUntil(startTime.plus(duration));
 		engine.getLoggerHub().terminate();
@@ -47,7 +46,8 @@ public class Monitor {
 	}
 	
 	
-	private static void initPathFinder(PathFinder path, Environment env){
+	private static void initPathFinder(Environment env){
+		PathFinder path = env.getPathFinder();
 		env.getNodes().forEach(
 				(id,n) -> path.addLocation(String.valueOf(n.getID()))
 				);
@@ -57,11 +57,11 @@ public class Monitor {
 		//construction du graph
 		path.build();
 		//on affecte le pathFinder a chaque frontier
-		env.getNodes().forEach(
+		/*env.getNodes().forEach(
 				(id,n) -> {if(n instanceof Frontier){
 					((Frontier) n).setPathFinder(path);
 				}}
-				);
+				);*/
 	}
 	
 }

@@ -16,10 +16,16 @@ public class Cross extends Node implements ISimEntity {
 		isOccupied[2] = null;
 		isOccupied[3] = null;
 		this.rule = rule;
+		
+		
 	}
 	
 	public Car getIsOccupied(int i) {
 		return this.isOccupied[i];
+	}
+	
+	public Car getIsOccupied(Node n) {
+		return this.isOccupied[0];
 	}
 	
 	public void setIsOccupied(int i, Car c) {

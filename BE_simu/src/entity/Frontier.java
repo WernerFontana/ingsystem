@@ -3,7 +3,6 @@ package entity;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -23,7 +22,6 @@ public class Frontier extends Node implements ISimEntity {
 	
 	private double longueur = 4.5;
 	private double distSecu = 0.5;
-	private PathFinder path;
 	private int dest = 0;
 	
 
@@ -42,11 +40,11 @@ public class Frontier extends Node implements ISimEntity {
 		rawNum.add(4);
 		rawNum.add(5);
 		
-		addProba(5);
+		/*addProba(5);
 		addProba(50);
 		addProba(0);
 		addProba(25);
-		addProba(20);		
+		addProba(20);	*/	
 
 
 		generation();
@@ -92,19 +90,18 @@ public class Frontier extends Node implements ISimEntity {
 
 
 	private void genCar(ISimEngine engine){
-		//engine.log(this, "generation d'une voiture");
-		
 		//generation de la destination
 		Random rand = new Random();
 		int d =rand.nextInt(100);
 		
 		for(int i = 0;i<rawProba.size();i++){
-			if(d <= rawProba.get(i)){
+			if(d < rawProba.get(i)){
 				dest = i+1;
 				break;
 			}
 		}
 		
+		//generation de la voiture
 		if(lines != null)
 			lines.forEach((id,l) -> l.addCar(new Car(1, this.engine, env, longueur, distSecu, this,(Frontier)env.getNode(dest))));
 		else
@@ -130,9 +127,6 @@ public class Frontier extends Node implements ISimEntity {
 			lines.put(id, l);
 		else
 			engine.log(this, ">>>>>>>>>>>>>>Problème d'ajout de line pour Frontier");
-	}
-	public void setPathFinder(PathFinder p){
-		this.path = p;
 	}
 	/**
 	 * Proba a ajouter dans l'ordre en tenant compte de la proba 0 d'allersur soi-meme

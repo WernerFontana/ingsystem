@@ -62,7 +62,7 @@ public class DataManager {
 		return freq;
 	}
 	
-	public int getAttract(int idSource, int idCible) {
-		return bdd.getJSONArray("attrait").getJSONArray(idSource-1).getInt(idCible-1);
+	public JSONArray getAttract(int idSource) {
+		return bdd.getJSONArray("attrait").getJSONArray(idSource-1);
 	}
 }
