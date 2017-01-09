@@ -26,7 +26,7 @@ public class Car extends Entity implements ISimEntity,Observer {
 		path = new LinkedList<>();
 		engine.log(this, "generation Car");
 		
-		for(int pathID:env.getPathFinder().execute(begin.getID(), end.getID()))
+		for(int pathID:env.getPathFinder().execute(begin.getID()-1, end.getID()-1))
 		{
 			path.add(env.getLine(pathID));
 		}
@@ -46,8 +46,36 @@ public class Car extends Entity implements ISimEntity,Observer {
 	
 	public void moveToEnd(ISimEngine engine)
 	{
-		this.toString();
-		System.out.println("Moving");
+		
+		System.out.println(this.toString()+" : Moving");
+		engine.scheduleEventIn(this, Duration.ofSeconds(0), this::checkNode);
+	}
+	
+	public void checkNode(ISimEngine engine)
+	{
+		if(currentLine.getEnd() instanceof Cross)
+		{
+			engine.scheduleEventIn(this, Duration.ofSeconds(0), this::crossCrossing);
+		}
+		else if(currentLine.getEnd() instanceof Frontier)
+		{
+			engine.scheduleEventIn(this, Duration.ofSeconds(0), this::endTrip);
+		}
+	}
+	
+	public void crossCrossing(ISimEngine engine)
+	{
+		System.out.println(this.toString()+ " : Crossing the cross, from : "+currentLine.getID());
+		path.getFirst().getCars().remove(this);
+		path.removeFirst();
+		currentLine=path.getFirst();
+		path.getFirst().getCars().add(this);
+		engine.scheduleEventIn(this, Duration.ofSeconds(0), this::moveToEnd);
+	}
+	
+	public void endTrip(ISimEngine engine)
+	{
+		System.out.println(this.toString()+" : End of travel at : "+currentLine.getID());
 	}
 
 }
