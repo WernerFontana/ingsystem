@@ -51,4 +51,6 @@ public class Line extends Entity implements ISimEntity {
 		return longueur;
 	}
 	
+	
+	
 }

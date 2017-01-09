@@ -17,11 +17,6 @@ public class PathFinder {
 	private List<IEdge> edges;
 	
 	private DijkstraAlgorithm dijkstra;
-
-	public static void main(String[] args) {
-		PathFinder tda = new PathFinder();
-		tda.execute(1,3);
-	}
 	
 	public PathFinder(){
 		nodes = new ArrayList<IVertex>();
@@ -36,11 +31,12 @@ public class PathFinder {
 	
 	public LinkedList<Integer> execute(int begin, int end) {		
 		dijkstra.execute(nodes.get(begin));
-		LinkedList<IVertex> path = dijkstra.getNodePath(nodes.get(end));
-		LinkedList<Integer> pathId = new LinkedList<Integer>();
+		LinkedList<IEdge> path = dijkstra.getEdgePath(nodes.get(end));
 		
-		for (IVertex vertex : path) {
-			pathId.add(Integer.valueOf(vertex.getId()));
+		LinkedList<Integer> pathId = new LinkedList<Integer>();
+		System.out.println(begin+" "+end);
+		for (IEdge edge : path) {
+			pathId.add(Integer.valueOf(edge.getId()));
 		}
 		
 		return pathId;
@@ -50,8 +46,8 @@ public class PathFinder {
 		Edge lane = new Edge(laneId,nodes.get(sourceLocNo-1), nodes.get(destLocNo-1), duration);
 		edges.add(lane);
 
-		lane = new Edge(laneId+"rev",nodes.get(destLocNo-1), nodes.get(sourceLocNo-1),duration);
-		edges.add(lane);
+		/*lane = new Edge(laneId,nodes.get(destLocNo-1), nodes.get(sourceLocNo-1),duration);
+		edges.add(lane);*/
 	}
 	public void addLocation(String nodeName){
 		Vertex location = new Vertex(nodeName, nodeName);
