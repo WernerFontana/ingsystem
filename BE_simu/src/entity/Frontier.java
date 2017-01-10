@@ -36,9 +36,9 @@ public class Frontier extends Node implements ISimEntity {
 
 		rawNum.add(5);
 		rawNum.add(2);
-		rawNum.add(3);
 		rawNum.add(4);
-		rawNum.add(5);
+		rawNum.add(3);
+		rawNum.add(6);
 		
 		/*addProba(5);
 		addProba(50);
@@ -70,7 +70,14 @@ public class Frontier extends Node implements ISimEntity {
 			//Generation des voitures pour chaque plage pour un jour
 			for(int i = numPlage;i<rawTime.size()-1;i++){
 				d = Duration.between(rawTime.get(i), rawTime.get(i+1));
-				d = d.dividedBy(rawNum.get(i));
+				if(rawNum.get(i)!=0)
+				{
+				d = d.dividedBy(rawNum.get(i));	
+				}
+				else
+				{
+					d=Duration.ZERO;
+				}				
 
 				l = rawTime.get(i);
 				for(int j = 0;j<rawNum.get(i);j++){

@@ -47,7 +47,7 @@ public class Car extends Entity implements ISimEntity,Observer {
 	public void moveToEnd(ISimEngine engine)
 	{
 		
-		System.out.println(this.toString()+" : Moving");
+		engine.log(this, "Moving");
 		engine.scheduleEventIn(this, Duration.ofSeconds(0), this::checkNode);
 	}
 	
@@ -65,7 +65,18 @@ public class Car extends Entity implements ISimEntity,Observer {
 	
 	public void crossCrossing(ISimEngine engine)
 	{
-		System.out.println(this.toString()+ " : Crossing the cross, from : "+currentLine.getID());
+		engine.log(this, "Crossing the cross, from : "+currentLine.getID());
+		Cross cross = (Cross) currentLine.getEnd();
+		//cross.
+		final int crossTop = cross.getTopLane();
+		if(cross.getRule())
+		{
+
+		}
+		else
+		{
+		
+		}
 		path.getFirst().getCars().remove(this);
 		path.removeFirst();
 		currentLine=path.getFirst();
@@ -75,7 +86,7 @@ public class Car extends Entity implements ISimEntity,Observer {
 	
 	public void endTrip(ISimEngine engine)
 	{
-		System.out.println(this.toString()+" : End of travel at : "+currentLine.getID());
+		engine.log(this, "End of travel at : "+currentLine.getID());
 	}
 
 }
