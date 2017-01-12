@@ -17,7 +17,7 @@ public class Frontier extends Node implements ISimEntity {
 	private LinkedList<LocalDateTime> rawTime = new LinkedList<LocalDateTime>();
 	//Contient le nombre de voiture a spawn pour chaque plage
 	private LinkedList<Integer> rawNum = new LinkedList<Integer>();
-	//Contient l'id d'une frontier et la proba associ� � celle-ci
+	//Contient l'id d'une frontier et la proba associ� � celle-ci
 	private ArrayList<Integer> rawProba = new ArrayList<Integer>();
 	
 	private double longueur = 4.5;
@@ -51,13 +51,19 @@ public class Frontier extends Node implements ISimEntity {
 	}
 
 	public void generation(){
+		/*
+		 * La variable aleaGen indique si la génération est
+		 * déterministe (false) ou aléatoire (true)
+		 */
+		boolean aleaGen = false;
+		
 		LocalDateTime beginSim = engine.getCurrentTime();
 		LocalDateTime endSim = engine.getCurrentTime().plus(engine.getSimuDuration());
 		LocalDateTime l = engine.getCurrentTime();
 		Duration d = Duration.ZERO;
 		int numPlage = 0;
 
-		//Determination de la plage de d�part de la simulation
+		//Determination de la plage de d�part de la simulation
 		for(int i = 0;i<rawTime.size()-1;i++){
 			if(beginSim.isAfter(rawTime.get(i)) || beginSim.isEqual(rawTime.get(i))){
 				if(beginSim.isBefore(rawTime.get(i+1))){
@@ -68,24 +74,35 @@ public class Frontier extends Node implements ISimEntity {
 		
 		while(l.isBefore(endSim)){
 			//Generation des voitures pour chaque plage pour un jour
+			
 			for(int i = numPlage;i<rawTime.size()-1;i++){
 				d = Duration.between(rawTime.get(i), rawTime.get(i+1));
-				if(rawNum.get(i)!=0)
-				{
-				d = d.dividedBy(rawNum.get(i));	
-				}
-				else
-				{
+				if(rawNum.get(i)!=0) {
+					d = d.dividedBy(rawNum.get(i));	
+				} else {
 					d=Duration.ZERO;
-				}				
-
-				l = rawTime.get(i);
-				for(int j = 0;j<rawNum.get(i);j++){
-					l = l.plus(d);
-					if(l.isAfter(beginSim))
-						engine.scheduleEventAt(this, l, this::genCar);
+				}
+				
+				if (!aleaGen) {
+					/* Génération déterministe des voitures */
+					l = rawTime.get(i);
+					for(int j = 0; j<rawNum.get(i); j++){
+						l = l.plus(d);
+						if(l.isAfter(beginSim)) {
+							engine.scheduleEventAt(this, l, this::genCar);
+						}
+					}
+				} else {
+					/* Génération aléatoire des voitures */
+					long ll;
+					for (int j = 0; j < rawNum.get(i); j++) {
+						l = rawTime.get(i);
+						ll = nextLong(0, Duration.between(rawTime.get(i), rawTime.get(i+1)).getSeconds());
+						engine.scheduleEventAt(this, l.plus(Duration.ofSeconds(ll)), this::genCar);
+					}
 				}
 			}
+			
 			//decalage des plages horaires pour le jour suivant
 			for(int k = 0;k<rawTime.size();k++){
 				rawTime.set(k, rawTime.get(k).plusDays(1));
@@ -94,7 +111,25 @@ public class Frontier extends Node implements ISimEntity {
 		}
 
 	}
-
+	
+	long nextLong(long origin, long bound) {
+		Random alea = new Random();
+		long r = alea.nextLong();
+		long n = bound - origin, m = n - 1;
+		if ((n & m) == 0L) // power of two
+			r = (r & m) + origin;
+		else if (n > 0L) { // reject over-represented candidates
+			for (long u = r >>> 1; // ensure nonnegative
+					u + m - (r = u % n) < 0L; // rejection check
+					u = alea.nextLong() >>> 1) // retry
+				;
+			r += origin;
+		} else { // range not representable as long
+			while (r < origin || r >= bound)
+				r = alea.nextLong();
+		}
+		return r;
+	}
 
 	private void genCar(ISimEngine engine){
 		//generation de la destination
@@ -112,7 +147,7 @@ public class Frontier extends Node implements ISimEntity {
 		if(lines != null)
 			lines.forEach((id,l) -> l.addCar(new Car(1, this.engine, env, longueur, distSecu, this,(Frontier)env.getNode(dest))));
 		else
-			engine.log(this, "pas de line connect�e");
+			engine.log(this, "pas de line connect�e");
 	}
 
 	
@@ -133,7 +168,7 @@ public class Frontier extends Node implements ISimEntity {
 		if(lines.isEmpty())
 			lines.put(id, l);
 		else
-			engine.log(this, ">>>>>>>>>>>>>>Probl�me d'ajout de line pour Frontier");
+			engine.log(this, ">>>>>>>>>>>>>>Probl�me d'ajout de line pour Frontier");
 	}
 	/**
 	 * Proba a ajouter dans l'ordre en tenant compte de la proba 0 d'allersur soi-meme
