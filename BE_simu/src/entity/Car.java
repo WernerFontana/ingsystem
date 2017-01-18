@@ -1,6 +1,7 @@
 package entity;
 
 import java.time.Duration;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
@@ -16,7 +17,8 @@ public class Car extends Entity implements ISimEntity,Observer {
 	private Frontier begin, end;
 	private LinkedList<Line> path;
 	private Line currentLine;
-	private final int AVG_SPEED = 14;
+	private Iterator<Line> iteratorCurrent;
+	public final int vitesse = 50;
 	
 	public Car(int id, BasicSimEngine engine, Environment env, double l, double d, Frontier begin, Frontier end){
 		super(id,engine,env);
@@ -31,93 +33,78 @@ public class Car extends Entity implements ISimEntity,Observer {
 		{
 			path.add(env.getLine(pathID));
 		}
-		
-		currentLine = path.getFirst();
-		currentLine.addCar(this);
-		
-		if(!currentLine.getCars().isEmpty())
-		{
-			currentLine.getCars().getLast().addObserver(this);
-			this.addObserver(this);			
-		}
-		engine.scheduleEventIn(this, Duration.ofSeconds(0), this::linePassing);
-		
+		iteratorCurrent = path.iterator();
+		currentLine = iteratorCurrent.next();
+		engine.scheduleEventIn(this, Duration.ofSeconds(currentLine.getLongueur()/14), this::moveToEnd);
 	}
 	
 	public String toString(){
-		return "Car("+this.getID()+") : "+begin.getID()+"->"+end.getID();
+		String s = "";
+		s += "Car("+this.getID()+") : ";
+		s += begin.getID();
+		for(Line l : path){
+			s += "->"+l.getID();
+		}
+		s += "->"+end.getID();
+		return s;
 	}
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		try
-		{
-			Car car = (Car) arg0;
-		}
-		catch(ClassCastException e)
-		{
-			e.printStackTrace();
-			//TODO : trouver la bonne exception
-		}
+		// TODO Auto-generated method stub
 		
 	}
 	
-	public void linePassing(ISimEngine engine)
+	public void moveToEnd(ISimEngine engine)
 	{
-		engine.log(this, "parcours de la voie");
-		int travelTime = (int) (currentLine.getLongueur()-currentLine.getCars().size()*longueur*distSecu*2)/AVG_SPEED;
-		this.setChanged();
-		this.notifyObservers();
-		engine.scheduleEventIn(this, Duration.ofSeconds(travelTime), this::checkNode);
-		
+		engine.scheduleEventIn(this, Duration.ofSeconds(0), this::checkNode);
 	}
 	
 	public void checkNode(ISimEngine engine)
 	{
-		switch(currentLine.getEndType())
+		if(currentLine.getEnd() instanceof Cross)
 		{
-		case Line.FEU:
-			engine.log(this, "feu===========================================================");
-			break;
-		case Line.STOP:
-			engine.log(this, "stop==========================================================");
-			break;
-		case Line.END:
-			engine.scheduleEventIn(this, Duration.ofSeconds(0), this::endTrip);
-			break;
-		case Line.FREE:
 			engine.scheduleEventIn(this, Duration.ofSeconds(0), this::crossCrossing);
-			break;
-			default:
-			engine.log(this, "situation inconnue");
-			break;
 		}
-		
+		else if(currentLine.getEnd() instanceof Frontier)
+		{
+			engine.scheduleEventIn(this, Duration.ofSeconds(0), this::endTrip);
+		}
 	}
 	
 	public void crossCrossing(ISimEngine engine)
 	{
+		
 		engine.log(this, "Crossing the cross, from : "+currentLine.getID());
-		Cross c= (Cross) currentLine.getEnd();
-		if(c.getIsOccupied(currentLine, path.get(1)))
+		Cross cross = (Cross) currentLine.getEnd();
+		//cross.
+		final int crossTop = cross.getTopLane();
+		if(cross.getRule())
 		{
-		path.getFirst().getCars().remove(this);
-		path.removeFirst();
-		currentLine=path.getFirst();
-		path.getFirst().getCars().add(this);
-		engine.scheduleEventIn(this, Duration.ofSeconds(0), this::linePassing);
+
 		}
 		else
 		{
-			engine.scheduleEventIn(this, Duration.ofSeconds(10), this::crossCrossing);
+		
 		}
-
+		path.getFirst().getCars().remove(this);
+		currentLine = iteratorCurrent.next();
+		currentLine.getCars().add(this);
+		engine.scheduleEventIn(this, Duration.ofSeconds(0), this::moveToEnd);
 	}
 	
 	public void endTrip(ISimEngine engine)
 	{
 		engine.log(this, "End of travel at : "+currentLine.getID());
 	}
+	
+	/*private Duration getDurationToGo(){
+		int l = 0;
+		for(Car c : currentLine.getCars()){
+			l += c.longueur;
+			l += c.distSecu;
+		}
+		
+	}*/
 
 }

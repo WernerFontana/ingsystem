@@ -56,12 +56,6 @@ public class Monitor {
 				);
 		//construction du graph
 		path.build();
-		//on affecte le pathFinder a chaque frontier
-		/*env.getNodes().forEach(
-				(id,n) -> {if(n instanceof Frontier){
-					((Frontier) n).setPathFinder(path);
-				}}
-				);*/
 	}
 	
 }

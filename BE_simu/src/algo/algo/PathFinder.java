@@ -34,7 +34,6 @@ public class PathFinder {
 		LinkedList<IEdge> path = dijkstra.getEdgePath(nodes.get(end));
 		
 		LinkedList<Integer> pathId = new LinkedList<Integer>();
-		System.out.println(begin+" "+end);
 		for (IEdge edge : path) {
 			pathId.add(Integer.valueOf(edge.getId()));
 		}
@@ -45,9 +44,6 @@ public class PathFinder {
 	public void addLane(String laneId, int sourceLocNo, int destLocNo, int duration) {
 		Edge lane = new Edge(laneId,nodes.get(sourceLocNo-1), nodes.get(destLocNo-1), duration);
 		edges.add(lane);
-
-		/*lane = new Edge(laneId,nodes.get(destLocNo-1), nodes.get(sourceLocNo-1),duration);
-		edges.add(lane);*/
 	}
 	public void addLocation(String nodeName){
 		Vertex location = new Vertex(nodeName, nodeName);
