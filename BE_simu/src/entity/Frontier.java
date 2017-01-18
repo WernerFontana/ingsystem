@@ -144,10 +144,11 @@ public class Frontier extends Node implements ISimEntity {
 		}
 		
 		//generation de la voiture
-		if(lines != null)
-			lines.forEach((id,l) -> l.addCar(new Car(1, this.engine, env, longueur, distSecu, this,(Frontier)env.getNode(dest))));
+		Car c = new Car(1, this.engine, env, longueur, distSecu, this,(Frontier)env.getNode(dest));
+		/*if(lines != null)
+			lines.forEach((id,l) -> l.addCar(c));
 		else
-			engine.log(this, "pas de line connect�e");
+			engine.log(this, "pas de line connect�e");*/
 	}
 
 	
