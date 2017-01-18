@@ -1,6 +1,7 @@
 package entity;
 
 import java.time.Duration;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
@@ -16,6 +17,8 @@ public class Car extends Entity implements ISimEntity,Observer {
 	private Frontier begin, end;
 	private LinkedList<Line> path;
 	private Line currentLine;
+	private Iterator<Line> iteratorCurrent;
+	public final int vitesse = 50;
 	
 	public Car(int id, BasicSimEngine engine, Environment env, double l, double d, Frontier begin, Frontier end){
 		super(id,engine,env);
@@ -30,12 +33,20 @@ public class Car extends Entity implements ISimEntity,Observer {
 		{
 			path.add(env.getLine(pathID));
 		}
-		currentLine = path.getFirst();
+		iteratorCurrent = path.iterator();
+		currentLine = iteratorCurrent.next();
 		engine.scheduleEventIn(this, Duration.ofSeconds(currentLine.getLongueur()/14), this::moveToEnd);
 	}
 	
 	public String toString(){
-		return "Car("+this.getID()+") : "+begin.getID()+"->"+end.getID();
+		String s = "";
+		s += "Car("+this.getID()+") : ";
+		s += begin.getID();
+		for(Line l : path){
+			s += "->"+l.getID();
+		}
+		s += "->"+end.getID();
+		return s;
 	}
 
 	@Override
@@ -46,8 +57,6 @@ public class Car extends Entity implements ISimEntity,Observer {
 	
 	public void moveToEnd(ISimEngine engine)
 	{
-		
-		engine.log(this, "Moving");
 		engine.scheduleEventIn(this, Duration.ofSeconds(0), this::checkNode);
 	}
 	
@@ -65,6 +74,7 @@ public class Car extends Entity implements ISimEntity,Observer {
 	
 	public void crossCrossing(ISimEngine engine)
 	{
+		
 		engine.log(this, "Crossing the cross, from : "+currentLine.getID());
 		Cross cross = (Cross) currentLine.getEnd();
 		//cross.
@@ -78,9 +88,8 @@ public class Car extends Entity implements ISimEntity,Observer {
 		
 		}
 		path.getFirst().getCars().remove(this);
-		path.removeFirst();
-		currentLine=path.getFirst();
-		path.getFirst().getCars().add(this);
+		currentLine = iteratorCurrent.next();
+		currentLine.getCars().add(this);
 		engine.scheduleEventIn(this, Duration.ofSeconds(0), this::moveToEnd);
 	}
 	
@@ -88,5 +97,14 @@ public class Car extends Entity implements ISimEntity,Observer {
 	{
 		engine.log(this, "End of travel at : "+currentLine.getID());
 	}
+	
+	/*private Duration getDurationToGo(){
+		int l = 0;
+		for(Car c : currentLine.getCars()){
+			l += c.longueur;
+			l += c.distSecu;
+		}
+		
+	}*/
 
 }
