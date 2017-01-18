@@ -16,7 +16,9 @@ public class CrossBuilder {
 			int len = jsonArray.length();
 			
 			for (int i=0;i<len;i++){ 
-				env.addNode(new Cross(((JSONObject)jsonArray.get(i)).getInt("id"),engine,env,true,((JSONObject)jsonArray.get(i)).getInt("right"),((JSONObject)jsonArray.get(i)).getInt("top"),((JSONObject)jsonArray.get(i)).getInt("left"),((JSONObject)jsonArray.get(i)).getInt("bottom")));
+				env.addNode(new Cross(((JSONObject)jsonArray.get(i)).getInt("id"),engine,env,true,
+						((JSONObject)jsonArray.get(i)).getInt("rightIn"),((JSONObject)jsonArray.get(i)).getInt("topIn"),((JSONObject)jsonArray.get(i)).getInt("leftIn"),((JSONObject)jsonArray.get(i)).getInt("bottomIn"),
+						((JSONObject)jsonArray.get(i)).getInt("rightOut"),((JSONObject)jsonArray.get(i)).getInt("topOut"),((JSONObject)jsonArray.get(i)).getInt("leftOut"),((JSONObject)jsonArray.get(i)).getInt("bottomOut")));
 			} 
 		} 
 	}

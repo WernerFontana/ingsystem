@@ -22,7 +22,7 @@ public class Monitor {
 		
 		BasicSimEngine engine = new BasicSimEngine();
 		final LocalDateTime startTime = LocalDateTime.of(2017, 1, 1, 0, 0);
-		final Duration duration = Duration.ofHours(36);
+		final Duration duration = Duration.ofHours(10);
 		
 		
 		engine.getLoggerHub().addLogger(new SysOutLogger());
@@ -39,6 +39,8 @@ public class Monitor {
 		
 		engine.processEventsUntil(startTime.plus(duration));
 		engine.getLoggerHub().terminate();
+		
+		env.getLines().forEach((i,l) -> System.out.println(i+"   "+((Line)l).getCars()));
 		
 		//Fermeture du fichier de conf
 		Prop.self.close();
