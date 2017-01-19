@@ -34,11 +34,11 @@ public class Frontier extends Node implements ISimEntity {
 		rawTime.add(LocalDateTime.of(2017, 1, 1, 19, 0));
 		rawTime.add(LocalDateTime.of(2017, 1, 2, 0, 0));
 
-		rawNum.add(5);
-		rawNum.add(2);
-		rawNum.add(4);
-		rawNum.add(3);
-		rawNum.add(6);
+		rawNum.add(1);
+		rawNum.add(00);
+		rawNum.add(00);
+		rawNum.add(00);
+		rawNum.add(00);
 		
 		/*addProba(5);
 		addProba(50);
@@ -145,10 +145,10 @@ public class Frontier extends Node implements ISimEntity {
 		
 		//generation de la voiture
 		Car c = new Car(1, this.engine, env, longueur, distSecu, this,(Frontier)env.getNode(dest));
-		/*if(lines != null)
+		if(lines != null)
 			lines.forEach((id,l) -> l.addCar(c));
 		else
-			engine.log(this, "pas de line connect�e");*/
+			engine.log(this, "pas de line connect�e");
 	}
 
 	
