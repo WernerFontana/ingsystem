@@ -50,7 +50,7 @@ public interface ISimEngine {
 	}
 	
 	public default void processEventsUntil(LocalDateTime endTime) {
-		while (getCurrentTime().isBefore(endTime) && processNextEvent()) {}
+		while (getCurrentTime().isBefore(endTime.plusHours(1)) && processNextEvent()) {}
 	}
 	
 }

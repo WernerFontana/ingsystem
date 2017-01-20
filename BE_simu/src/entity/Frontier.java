@@ -10,6 +10,7 @@ import algo.algo.PathFinder;
 import engine.ISimEngine;
 import engine.ISimEntity;
 import engine.impl.BasicSimEngine;
+import utils.IDGenerator;
 
 public class Frontier extends Node implements ISimEntity {
 
@@ -35,10 +36,10 @@ public class Frontier extends Node implements ISimEntity {
 		rawTime.add(LocalDateTime.of(2017, 1, 2, 0, 0));
 
 		rawNum.add(1);
-		rawNum.add(00);
-		rawNum.add(00);
-		rawNum.add(00);
-		rawNum.add(00);
+		rawNum.add(1);
+		rawNum.add(1);
+		rawNum.add(1);
+		rawNum.add(1);
 		
 		/*addProba(5);
 		addProba(50);
@@ -144,11 +145,11 @@ public class Frontier extends Node implements ISimEntity {
 		}
 		
 		//generation de la voiture
-		Car c = new Car(1, this.engine, env, longueur, distSecu, this,(Frontier)env.getNode(dest));
-		if(lines != null)
+		Car c = new Car(IDGenerator.getSelf().getNext(), this.engine, env, longueur, distSecu, this,(Frontier)env.getNode(dest));
+		/*if(lines != null)
 			lines.forEach((id,l) -> l.addCar(c));
 		else
-			engine.log(this, "pas de line connect�e");
+			engine.log(this, "pas de line connect�e");*/
 	}
 
 	

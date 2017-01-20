@@ -32,94 +32,127 @@ public class Cross extends Node implements ISimEntity {
 
 	public LinkedList<Integer> getWay(Car c){
 		LinkedList<Integer> l = new LinkedList<>();
+
+		if(isAvailable()){
+			if(c.getCurrentLine().getID() == topIn){
+				if(!setIsOccupied(0, c))
+					return null;
+				if(c.getPath().get(c.getCurrentIndex()+1).getID() == rightOut){
+					l.add(0);
+					l.add(2);
+					l.add(3);
+				}
+				else if(c.getPath().get(c.getCurrentIndex()+1).getID() == bottomOut){
+					l.add(0);
+					l.add(2);
+				}
+				else if(c.getPath().get(c.getCurrentIndex()+1).getID() == leftOut){
+					l.add(0);
+				}
+				else{
+					System.out.println("------------------------------------------------>Problème : "+topIn+"|"+c.getPath().get(c.getCurrentIndex()).getID());
+				}
+			}
+			else if(c.getCurrentLine().getID() == rightIn){
+				if(!setIsOccupied(1, c))
+					return null;
+				if(c.getPath().get(c.getCurrentIndex()+1).getID() == topOut){
+					l.add(1);
+				}
+				else if(c.getPath().get(c.getCurrentIndex()+1).getID() == bottomOut){
+					l.add(1);
+					l.add(0);
+					l.add(2);
+				}
+				else if(c.getPath().get(c.getCurrentIndex()+1).getID() == leftOut){
+					l.add(1);
+					l.add(0);
+				}
+				else{
+					System.out.println("------------------------------------------------>Problème : "+rightIn+"|"+c.getPath().get(c.getCurrentIndex()).getID());
+				}
+			}
+			else if(c.getCurrentLine().getID() == leftIn){
+				if(!setIsOccupied(2, c))
+					return null;
+				if(c.getPath().get(c.getCurrentIndex()+1).getID() == topOut){
+					l.add(2);
+					l.add(3);
+					l.add(1);
+				}
+				else if(c.getPath().get(c.getCurrentIndex()+1).getID() == bottomOut){
+					l.add(2);
+				}
+				else if(c.getPath().get(c.getCurrentIndex()+1).getID() == rightOut){
+					l.add(2);
+					l.add(3);
+				}
+				else{
+					System.out.println("------------------------------------------------>Problème : "+leftIn+"|"+c.getPath().get(c.getCurrentIndex()).getID());
+				}
+			}
+			else if(c.getCurrentLine().getID() == bottomIn){
+				if(!setIsOccupied(3, c))
+					return null;
+				if(c.getPath().get(c.getCurrentIndex()+1).getID() == topOut){
+					l.add(3);
+					l.add(1);
+				}
+				else if(c.getPath().get(c.getCurrentIndex()+1).getID() == leftOut){
+					l.add(3);
+					l.add(1);
+					l.add(0);
+				}
+				else if(c.getPath().get(c.getCurrentIndex()+1).getID() == rightOut){
+					l.add(3);
+				}
+				else{
+					System.out.println("------------------------------------------------>Problème : "+bottomIn+"|"+c.getPath().get(c.getCurrentIndex()).getID());
+				}
+			}
+			return l;
+		}
+		else{
+			return null;
+		}
 		
-		if(c.getCurrentLine().getID() == topIn){
-			isOccupied[0] = c;
-			if(c.getPath().get(c.getCurrentIndex()+1).getID() == rightOut){
-				l.add(0);
-				l.add(2);
-				l.add(3);
-			}
-			else if(c.getPath().get(c.getCurrentIndex()+1).getID() == bottomOut){
-				l.add(0);
-				l.add(2);
-			}
-			else if(c.getPath().get(c.getCurrentIndex()+1).getID() == leftOut){
-				l.add(0);
-			}
-			else{
-				System.out.println("------------------------------------------------>Problème : "+topIn+"|"+c.getPath().get(c.getCurrentIndex()).getID());
-				}
-		}
-		else if(c.getCurrentLine().getID() == rightIn){
-			isOccupied[1] = c;
-			if(c.getPath().get(c.getCurrentIndex()+1).getID() == topOut){
-				l.add(1);
-			}
-			else if(c.getPath().get(c.getCurrentIndex()+1).getID() == bottomOut){
-				l.add(1);
-				l.add(0);
-				l.add(2);
-			}
-			else if(c.getPath().get(c.getCurrentIndex()+1).getID() == leftOut){
-				l.add(1);
-				l.add(0);
-			}
-			else{
-				System.out.println("------------------------------------------------>Problème : "+rightIn+"|"+c.getPath().get(c.getCurrentIndex()).getID());
-				}
-		}
-		else if(c.getCurrentLine().getID() == leftIn){
-			isOccupied[2] = c;
-			if(c.getPath().get(c.getCurrentIndex()+1).getID() == topOut){
-				l.add(2);
-				l.add(3);
-				l.add(1);
-			}
-			else if(c.getPath().get(c.getCurrentIndex()+1).getID() == bottomOut){
-				l.add(2);
-			}
-			else if(c.getPath().get(c.getCurrentIndex()+1).getID() == rightOut){
-				l.add(2);
-				l.add(3);
-			}
-			else{
-				System.out.println("------------------------------------------------>Problème : "+leftIn+"|"+c.getPath().get(c.getCurrentIndex()).getID());
-				}
-		}
-		else if(c.getCurrentLine().getID() == bottomIn){
-			isOccupied[3] = c;
-			if(c.getPath().get(c.getCurrentIndex()+1).getID() == topOut){
-				l.add(3);
-				l.add(1);
-			}
-			else if(c.getPath().get(c.getCurrentIndex()+1).getID() == leftOut){
-				l.add(3);
-				l.add(1);
-				l.add(0);
-			}
-			else if(c.getPath().get(c.getCurrentIndex()+1).getID() == rightOut){
-				l.add(3);
-			}
-			else{
-				System.out.println("------------------------------------------------>Problème : "+bottomIn+"|"+c.getPath().get(c.getCurrentIndex()).getID());
-			}
-		}
-		return l;
 	}
 
-	public void setIsOccupied(int i, Car c) {
-		if(isOccupied[i] == null)
-			isOccupied[i] = c;
-		else if(c == null){
-			isOccupied[i] = null;
-			notifyObservers();
+	public boolean setIsOccupied(int i, Car c) {
+		if(c != null){
+			if(isOccupied[i] == null){
+				for(int j = 0;j<isOccupied.length;j++){
+					if(isOccupied[j] != null && isOccupied[j].equals(c))
+						isOccupied[j] = null;
+				}
+				isOccupied[i] = c;
+				notifyObservers();
+				return true;
+			}
+			else{
+				//engine.log(this, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Collision");
+				return false;
+			}
 		}
-		else
-			engine.log(this, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Collision");
+		else{
+			isOccupied[i] = c;
+			notifyObservers();
+			return true;
+		}
 	}
-	
-	
+
+	private boolean isAvailable(){
+		int c = 0;
+		for(int i = 0;i<isOccupied.length;i++){
+			if(isOccupied[i] == null)
+				c++;
+		}
+		if(c > 1)
+			return true;
+		else
+			return false;
+	}
+
 
 	public Car[] getIsOccupied() {
 		return isOccupied;

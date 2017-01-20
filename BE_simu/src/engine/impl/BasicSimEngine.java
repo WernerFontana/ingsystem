@@ -72,5 +72,9 @@ public class BasicSimEngine implements ISimEngine {
 	public Duration getSimuDuration(){
 		return simuDuration;
 	}
+	
+	public PriorityQueue<ISimEvent<?>> getEventQueue(){
+		return eventQueue;
+	}
 
 }
