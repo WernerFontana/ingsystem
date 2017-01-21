@@ -44,15 +44,17 @@ public class Monitor {
 		Checker c = new Checker(engine,env);
 		c.check();
 		
-		env.getLines().forEach((i,l) -> System.out.println(i+" : "+l.getCars()));
+		//env.getLines().forEach((i,l) -> System.out.println(i+" : "+l.getCars()));
 		
-		env.getNodes().forEach((i,n) -> {
+		/*env.getNodes().forEach((i,n) -> {
 			if(n instanceof Cross){
+				System.out.println(((Cross)n).countObservers());
 				for(int j = 0;j<((Cross)n).getIsOccupied().length;j++){
 					System.out.println(((Cross)n).getIsOccupied()[j]);
+					
 				}
 			}
-		});
+		});*/
 		
 		//Fermeture du fichier de conf
 		Prop.self.close();

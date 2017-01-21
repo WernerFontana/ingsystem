@@ -35,11 +35,11 @@ public class Frontier extends Node implements ISimEntity {
 		rawTime.add(LocalDateTime.of(2017, 1, 1, 19, 0));
 		rawTime.add(LocalDateTime.of(2017, 1, 2, 0, 0));
 
-		rawNum.add(1);
-		rawNum.add(1);
-		rawNum.add(1);
-		rawNum.add(1);
-		rawNum.add(1);
+		rawNum.add(100);
+		rawNum.add(100);
+		rawNum.add(100);
+		rawNum.add(100);
+		rawNum.add(100);
 		
 		/*addProba(5);
 		addProba(50);
@@ -89,7 +89,7 @@ public class Frontier extends Node implements ISimEntity {
 					l = rawTime.get(i);
 					for(int j = 0; j<rawNum.get(i); j++){
 						l = l.plus(d);
-						if(l.isAfter(beginSim)) {
+						if(l.isAfter(beginSim) && l.isBefore(endSim)) {
 							engine.scheduleEventAt(this, l, this::genCar);
 						}
 					}
@@ -99,7 +99,8 @@ public class Frontier extends Node implements ISimEntity {
 					for (int j = 0; j < rawNum.get(i); j++) {
 						l = rawTime.get(i);
 						ll = nextLong(0, Duration.between(rawTime.get(i), rawTime.get(i+1)).getSeconds());
-						engine.scheduleEventAt(this, l.plus(Duration.ofSeconds(ll)), this::genCar);
+						if(l.plus(Duration.ofSeconds(ll)).isBefore(endSim))
+							engine.scheduleEventAt(this, l.plus(Duration.ofSeconds(ll)), this::genCar);
 					}
 				}
 			}

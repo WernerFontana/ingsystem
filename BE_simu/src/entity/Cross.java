@@ -1,6 +1,7 @@
 package entity;
 
 import java.util.LinkedList;
+import java.util.Observer;
 
 import engine.ISimEntity;
 import engine.impl.BasicSimEngine;
@@ -9,6 +10,8 @@ public class Cross extends Node implements ISimEntity {
 
 	private Car isOccupied[] = new Car[4];
 	private final int rightIn,topIn,leftIn,bottomIn,rightOut,topOut,leftOut,bottomOut;
+	
+	private LinkedList<Car> l = new LinkedList<>();
 
 	private boolean rule;
 	public final boolean STOP = true, FEU = false;
@@ -126,17 +129,19 @@ public class Cross extends Node implements ISimEntity {
 						isOccupied[j] = null;
 				}
 				isOccupied[i] = c;
-				notifyObservers();
+				//engine.log(this, c+" : "+i);
+				setChanged();
+				notifyObservers(c);
 				return true;
 			}
 			else{
-				//engine.log(this, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Collision");
 				return false;
 			}
 		}
 		else{
 			isOccupied[i] = c;
-			notifyObservers();
+			setChanged();
+			notifyObservers(c);
 			return true;
 		}
 	}
@@ -151,6 +156,28 @@ public class Cross extends Node implements ISimEntity {
 			return true;
 		else
 			return false;
+	}
+	
+	public String toString(){
+		String s = "Cross("+getID()+")";
+		for(int i = 0;i<isOccupied.length;i++){
+			s+=isOccupied[i]+"|";
+		}
+		return s;
+	}
+	
+	public void deleteObserver2(Observer o){
+		this.deleteObserver(o);
+		l.remove((Car)o);
+		//engine.log(this, "Observer - "+o+"#############################"+this.l);
+		
+	}
+	
+	public void addObserverSingle(Observer o){
+		//engine.log(this, "Observer - "+o+"#############################"+this.ob);
+		l.add((Car)o);
+		this.deleteObserver(o);
+		this.addObserver(o);
 	}
 
 

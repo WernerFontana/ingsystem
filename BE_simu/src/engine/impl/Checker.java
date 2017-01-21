@@ -17,10 +17,14 @@ public class Checker {
 	}
 	
 	public void check(){
+		System.out.println("end/gen : "+env.getNbCarEnd()+"/"+env.getNbCarGen());
+		
+		
 		boolean b = false;
 		for(Line l : env.getLines().values()){
 			if(!l.getCars().isEmpty()){
 				System.out.println("Car in Line : KO");
+				System.out.println(l+"            "+l.getCars());
 				b = true;
 				break;
 			}

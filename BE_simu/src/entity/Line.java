@@ -60,6 +60,10 @@ public class Line extends Entity implements ISimEntity {
 		return longueur;
 	}
 	
-	
+	public String toString(){
+		String s = "";
+		s += "Line("+getID()+") = begin : "+begin+", end : "+end;
+		return s;
+	}
 	
 }
