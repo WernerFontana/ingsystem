@@ -44,6 +44,8 @@ public class Monitor {
 		Checker c = new Checker(engine,env);
 		c.check();
 		
+		System.out.println(engine.getCurrentTime());
+		
 		//env.getLines().forEach((i,l) -> System.out.println(i+" : "+l.getCars()));
 		
 		/*env.getNodes().forEach((i,n) -> {

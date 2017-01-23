@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
-import algo.algo.PathFinder;
 import engine.ISimEngine;
 import engine.ISimEntity;
 import engine.impl.BasicSimEngine;
@@ -35,7 +34,7 @@ public class Frontier extends Node implements ISimEntity {
 		rawTime.add(LocalDateTime.of(2017, 1, 1, 19, 0));
 		rawTime.add(LocalDateTime.of(2017, 1, 2, 0, 0));
 
-		rawNum.add(100);
+		rawNum.add(150);
 		rawNum.add(100);
 		rawNum.add(100);
 		rawNum.add(100);
@@ -146,11 +145,7 @@ public class Frontier extends Node implements ISimEntity {
 		}
 		
 		//generation de la voiture
-		Car c = new Car(IDGenerator.getSelf().getNext(), this.engine, env, longueur, distSecu, this,(Frontier)env.getNode(dest));
-		/*if(lines != null)
-			lines.forEach((id,l) -> l.addCar(c));
-		else
-			engine.log(this, "pas de line connect�e");*/
+		new Car(IDGenerator.getSelf().getNext(), this.engine, env, longueur, distSecu, this,(Frontier)env.getNode(dest));
 	}
 
 	
