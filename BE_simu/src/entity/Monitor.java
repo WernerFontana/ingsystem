@@ -18,6 +18,7 @@ public class Monitor {
 	
 	public static void main(String [] args) {
 		final Random rand = new Random(LocalDateTime.now().getNano());
+		final LocalDateTime debut = LocalDateTime.now();
 		
 		BasicSimEngine engine = new BasicSimEngine();
 		final LocalDateTime startTime = LocalDateTime.of(2017, 1, 1, 0, 0);
@@ -33,13 +34,17 @@ public class Monitor {
 		Builder builder = new Builder(bdd,env,engine);
 		builder.build();
 		
+		
+		
 		engine.processEventsUntil(startTime.plus(duration));
 		engine.getLoggerHub().terminate();
 		
 		Checker c = new Checker(engine,env);
 		c.check();
 		
-		System.out.println(engine.getCurrentTime());
+		System.out.println("Date de fin de simulation : "+engine.getCurrentTime());
+		
+		System.out.println("Durée de simulation : "+Duration.between(debut, LocalDateTime.now()));
 		
 		//env.getLines().forEach((i,l) -> System.out.println(i+" : "+l.getCars()));
 		

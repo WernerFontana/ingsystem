@@ -1,5 +1,7 @@
 package Initializer;
 
+import java.time.LocalDateTime;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -36,6 +38,11 @@ public class Builder {
 			   Frontier f = new Frontier(((JSONObject)jsonArray.get(i)).getInt("id"),engine,env);
 			   //donne sur l'attractivite de chaque frontier
 			   bdd.getAttract(f.getID()).forEach((p) -> f.addProba((Integer)p));
+			   
+			   //Ajout des plages horaires
+			   LocalDateTime t[] = bdd.getHours();
+			   for (int j=0;j<t.length;j++)
+				   f.addRawTime(t[j]);
 			   
 			   env.addNode(f);
 		   } 

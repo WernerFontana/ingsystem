@@ -21,10 +21,8 @@ public class Car extends Entity implements ISimEntity,Observer {
 
 	private LinkedList<Integer> behavior;
 
-	private Iterator<Line> iteratorCurrent;
 	public final int vitesse = 50;
-	public final int timeCross = 60;
-	public final int timeCar = 5;
+	public final int timeCross = 5;
 
 	public Car(int id, BasicSimEngine engine, Environment env, double l, double d, Frontier begin, Frontier end){
 		super(id,engine,env);
@@ -39,8 +37,8 @@ public class Car extends Entity implements ISimEntity,Observer {
 		{
 			path.add(env.getLine(pathID));
 		}
-		iteratorCurrent = path.iterator();
-		currentLine = iteratorCurrent.next();
+
+		currentLine = path.getFirst();
 		currentIndex = 0;
 		currentLine.addCar(this);
 		check();
@@ -56,21 +54,21 @@ public class Car extends Entity implements ISimEntity,Observer {
 		if(arg0 instanceof Cross){
 			if(arg1 instanceof Car){
 				if(((Car)arg1).getID() != this.getID()){
-					checkNode(engine);//engine.log(this, "update : "+arg0);
+					checkNode(engine);
 				}
 			}
 		}
 		else if(arg0 instanceof Car){
-			checkNode(engine);
-			
+			engine.scheduleEventIn(this, Duration.ofSeconds((long)(longueur+distSecu)/14), this::checkNode);
 		}
 	}
 
 	private void addToNextLine(){
-		path.get(getCurrentIndex()).getCars().remove(this);
-		currentLine = iteratorCurrent.next();
-		currentLine.addCar(this);
+		currentLine.getCars().remove(this);
 		currentIndex++;
+		currentLine = path.get(currentIndex);
+		currentLine.addCar(this);
+		
 		check();
 	}
 
@@ -149,7 +147,7 @@ public class Car extends Entity implements ISimEntity,Observer {
 
 	public void endTrip()
 	{
-		path.get(getCurrentIndex()).getCars().remove(this);
+		currentLine.getCars().remove(this);
 		setChanged();
 		notifyObservers();
 		deleteObservers();
