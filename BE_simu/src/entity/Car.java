@@ -44,23 +44,12 @@ public class Car extends Entity implements ISimEntity,Observer {
 		currentIndex = 0;
 		currentLine.addCar(this);
 		check();
-		//engine.scheduleEventIn(this, Duration.ofSeconds(currentLine.getLongueur()/14), this::check);
 
 		env.carGen();
 		//engine.log(this, "generation Car");
 	}
 
-	public String toString(){
-		String s = "";
-		s += "Car("+this.getID()+") : ";
-		s += begin.getID();
-		for(Line l : path){
-			s += "->"+l.getID();
-		}
-		s += "->"+end.getID();
-		s+="   "+behavior;
-		return s;
-	}
+	
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
@@ -114,15 +103,7 @@ public class Car extends Entity implements ISimEntity,Observer {
 	}
 
 	private void nextIterationOfCross(ISimEngine engine){
-		Cross c = null;
-		try{
-			c = ((Cross)currentLine.getEnd());
-		}
-		catch(ClassCastException e){
-			System.out.println("probleme");
-			engine.log(this, this.getID()+"");
-			System.out.println(e);
-		}
+		Cross c = ((Cross)currentLine.getEnd());
 
 		Car isOccupied[] = c.getIsOccupied();
 
@@ -174,6 +155,18 @@ public class Car extends Entity implements ISimEntity,Observer {
 		deleteObservers();
 		env.carEnd();
 		//engine.log(this, "End of travel at : "+currentLine.getID());
+	}
+	
+	public String toString(){
+		String s = "";
+		s += "Car("+this.getID()+") : ";
+		s += begin.getID();
+		for(Line l : path){
+			s += "->"+l.getID();
+		}
+		s += "->"+end.getID();
+		s+="   "+behavior;
+		return s;
 	}
 
 	public Line getCurrentLine(){

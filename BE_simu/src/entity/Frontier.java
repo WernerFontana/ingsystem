@@ -162,14 +162,14 @@ public class Frontier extends Node implements ISimEntity {
 	public void addRawNum(int i){
 		rawNum.add(i);
 	}
-	public void addLine(int id, Line l){
+	public void addLine(Line l){
 		if(lines.isEmpty())
-			lines.put(id, l);
+			lines.put(l.getID(), l);
 		else
-			engine.log(this, ">>>>>>>>>>>>>>Probl�me d'ajout de line pour Frontier");
+			engine.log(this, ">>>>>>>>>>>>>>Probleme d'ajout de line pour Frontier");
 	}
 	/**
-	 * Proba a ajouter dans l'ordre en tenant compte de la proba 0 d'allersur soi-meme
+	 * Proba a ajouter dans l'ordre en tenant compte de la proba 0 d'aller sur soi-meme
 	 * @param p
 	 */
 	public void addProba(int p){

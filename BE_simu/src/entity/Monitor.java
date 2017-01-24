@@ -4,9 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Random;
 
-import Initializer.CrossBuilder;
-import Initializer.FrontierBuilder;
-import Initializer.LaneBuilder;
+import Initializer.Builder;
 import algo.algo.PathFinder;
 import config.DataManager;
 import config.Prop;
@@ -32,11 +30,8 @@ public class Monitor {
 		DataManager bdd = new DataManager();
 		
 		Environment env = new Environment();
-		FrontierBuilder fb= new FrontierBuilder(bdd,env,engine);
-		CrossBuilder cb= new CrossBuilder(bdd,env,engine);
-		LaneBuilder lb= new LaneBuilder(bdd,engine, env);
-		
-		initPathFinder(env);
+		Builder builder = new Builder(bdd,env,engine);
+		builder.build();
 		
 		engine.processEventsUntil(startTime.plus(duration));
 		engine.getLoggerHub().terminate();
@@ -61,19 +56,6 @@ public class Monitor {
 		//Fermeture du fichier de conf
 		Prop.self.close();
 		
-	}
-	
-	
-	private static void initPathFinder(Environment env){
-		PathFinder path = env.getPathFinder();
-		env.getNodes().forEach(
-				(id,n) -> path.addLocation(String.valueOf(n.getID()))
-				);
-		env.getLines().forEach(
-				(id,l) -> path.addLane(String.valueOf(id), l.getBegin().getID(), l.getEnd().getID(), l.getLongueur())
-				);
-		//construction du graph
-		path.build();
 	}
 	
 }

@@ -42,6 +42,10 @@
 			"rightOut":14,
 			"bottomOut" : 0,
 			"leftOut" : 13,
+			"top":0,
+			"right":0,
+			"bottom" : 0,
+			"left" : 0,
 			"type": 0
 		},
 		{
@@ -54,6 +58,10 @@
 			"rightOut":16,
 			"bottomOut" : 19,
 			"leftOut" : 15,
+			"top":0,
+			"right":0,
+			"bottom" : 0,
+			"left" : 0,
 			"type": 0
 		},
 		{
@@ -66,6 +74,10 @@
 			"rightOut":24,
 			"bottomOut" : 0,
 			"leftOut" : 23,
+			"top":0,
+			"right":0,
+			"bottom" : 0,
+			"left" : 0,
 			"type": 1
 		},
 		{
@@ -78,6 +90,10 @@
 			"rightOut":22,
 			"bottomOut" : 27,
 			"leftOut" : 21,
+			"top":0,
+			"right":0,
+			"bottom" : 0,
+			"left" : 0,
 			"type": 0
 		}
 	],
@@ -88,35 +104,30 @@
 			"id" : 12,
 			"begin" : 1,
 			"end" : 8,
-			"endType" : 3,
 			"longueur" : 3000
 		},
 				{
 			"id" : 13,
 			"begin" : 8,
 			"end" : 1,
-			"endType" : 2,
 			"longueur" : 3000
 		},
 				{
 			"id" : 14,
 			"begin" : 8,
 			"end" : 9,
-			"endType" : 3,
 			"longueur" : 1300
 		},
 				{
 			"id" : 15,
 			"begin" : 9,
 			"end" : 8,
-			"endType" : 3,
 			"longueur" : 1300
 		},
 				{
 			"id" : 16,
 			"begin" : 9,
 			"end" : 3,
-			"endType" : 2,
 			"longueur" : 2000
 		},
 				{
@@ -130,98 +141,84 @@
 			"id" : 18,
 			"begin" : 2,
 			"end" : 9,
-			"endType" : 3,
 			"longueur" : 4500
 		},
 				{
 			"id" : 19,
 			"begin" : 9,
 			"end" : 2,
-			"endType" : 1,
 			"longueur" : 4500
 		},
 				{
 			"id" : 20,
 			"begin" : 5,
 			"end" : 11,
-			"endType" : 3,
 			"longueur" : 4500
 		},
 				{
 			"id" : 21,
 			"begin" : 11,
 			"end" : 5,
-			"endType" : 2,
 			"longueur" : 4500
 		},
 				{
 			"id" : 22,
 			"begin" : 11,
 			"end" : 10,
-			"endType" : 0,
 			"longueur" : 800
 		},
 				{
 			"id" : 23,
 			"begin" : 10,
 			"end" : 11,
-			"endType" : 3,
 			"longueur" : 800
 		},
 				{
 			"id" : 24,
 			"begin" : 10,
 			"end" : 4,
-			"endType" : 2,
 			"longueur" : 1400
 		},
 		{
 			"id" : 25,
 			"begin" : 4,
 			"end" : 10,
-			"endType" : 0,
 			"longueur" : 1400
 		},
 		{
 			"id" : 26,
 			"begin" : 8,
 			"end" : 11,
-			"endType" : 1,
 			"longueur" : 3500
 		},
 		{
 			"id" : 27,
 			"begin" : 11,
 			"end" : 8,
-			"endType" : 1,
 			"longueur" : 3500
 		},
 		{
 			"id" : 28,
 			"begin" : 11,
 			"end" : 6,
-			"endType" : 2,
 			"longueur" : 1000
 		},
 		{
 			"id" : 29,
 			"begin" : 6,
 			"end" : 11,
-			"endType" : 1,
 			"longueur" : 1000
 		},
 		{
 			"id" : 30,
 			"begin" : 10,
 			"end" : 7,
-			"endType" : 2,
 			"longueur" : 3000
 		},
 		{
 			"id" : 31,
 			"begin" : 7,
 			"end" : 10,
-			"endType" : 0,
 			"longueur" : 3000
 		}
 	],
