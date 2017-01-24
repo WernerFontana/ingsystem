@@ -2,10 +2,8 @@ package entity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Random;
 
 import Initializer.Builder;
-import algo.algo.PathFinder;
 import config.DataManager;
 import config.Prop;
 import engine.impl.BasicSimEngine;
@@ -17,7 +15,6 @@ public class Monitor {
 	
 	
 	public static void main(String [] args) {
-		final Random rand = new Random(LocalDateTime.now().getNano());
 		final LocalDateTime debut = LocalDateTime.now();
 		
 		BasicSimEngine engine = new BasicSimEngine();
