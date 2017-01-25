@@ -43,7 +43,7 @@ public class Monitor {
 		
 		Checker c = new Checker(engine,env);
 		c.check();
-		
+		env.stats();
 		//env.getLines().forEach((i,l) -> System.out.println(i+" : "+l.getCars()));
 		
 		/*env.getNodes().forEach((i,n) -> {

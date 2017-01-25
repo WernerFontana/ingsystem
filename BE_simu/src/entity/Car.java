@@ -187,7 +187,7 @@ public class Car extends Entity implements ISimEntity,Observer {
 	 */
 	private void force(ISimEngine engine){
 		if(!updater)
-			nextIterationOfCross(engine);System.out.println("force");
+			nextIterationOfCross(engine);//System.out.println("force");
 	}
 
 	public void endTrip()
