@@ -1,7 +1,8 @@
 package entity;
 
-import engine.impl.BasicSimEngine;
 import java.util.Observable;
+
+import engine.impl.BasicSimEngine;
 
 public abstract class Entity extends Observable{
 

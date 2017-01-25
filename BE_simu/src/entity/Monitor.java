@@ -2,12 +2,8 @@ package entity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Random;
 
-import Initializer.CrossBuilder;
-import Initializer.FrontierBuilder;
-import Initializer.LaneBuilder;
-import algo.algo.PathFinder;
+import Initializer.Builder;
 import config.DataManager;
 import config.Prop;
 import engine.impl.BasicSimEngine;
@@ -19,7 +15,7 @@ public class Monitor {
 	
 	
 	public static void main(String [] args) {
-		final Random rand = new Random(LocalDateTime.now().getNano());
+		final LocalDateTime debut = LocalDateTime.now();
 		
 		BasicSimEngine engine = new BasicSimEngine();
 		final LocalDateTime startTime = LocalDateTime.of(2017, 1, 1, 0, 0);
@@ -32,18 +28,21 @@ public class Monitor {
 		DataManager bdd = new DataManager();
 		
 		Environment env = new Environment();
-		FrontierBuilder fb= new FrontierBuilder(bdd,env,engine);
-		CrossBuilder cb= new CrossBuilder(bdd,env,engine);
-		LaneBuilder lb= new LaneBuilder(bdd,engine, env);
+		Builder builder = new Builder(bdd,env,engine);
+		builder.build();
 		
-		initPathFinder(env);
+		
 		
 		engine.processEventsUntil(startTime.plus(duration));
 		engine.getLoggerHub().terminate();
 		
 		Checker c = new Checker(engine,env);
 		c.check();
-		env.stats();
+		
+		System.out.println("Date de fin de simulation : "+engine.getCurrentTime());
+		
+		System.out.println("Durée de simulation : "+Duration.between(debut, LocalDateTime.now()));
+		
 		//env.getLines().forEach((i,l) -> System.out.println(i+" : "+l.getCars()));
 		
 		/*env.getNodes().forEach((i,n) -> {
@@ -59,19 +58,6 @@ public class Monitor {
 		//Fermeture du fichier de conf
 		Prop.self.close();
 		
-	}
-	
-	
-	private static void initPathFinder(Environment env){
-		PathFinder path = env.getPathFinder();
-		env.getNodes().forEach(
-				(id,n) -> path.addLocation(String.valueOf(n.getID()))
-				);
-		env.getLines().forEach(
-				(id,l) -> path.addLane(String.valueOf(id), l.getBegin().getID(), l.getEnd().getID(), l.getLongueur())
-				);
-		//construction du graph
-		path.build();
 	}
 	
 }

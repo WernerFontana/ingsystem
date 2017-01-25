@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
-import algo.algo.PathFinder;
 import engine.ISimEngine;
 import engine.ISimEntity;
 import engine.impl.BasicSimEngine;
@@ -15,7 +14,7 @@ import utils.IDGenerator;
 public class Frontier extends Node implements ISimEntity {
 
 	//Contient la liste des horaires de debut des plages
-	private LinkedList<LocalDateTime> rawTime = new LinkedList<LocalDateTime>();
+	public LinkedList<LocalDateTime> rawTime = new LinkedList<LocalDateTime>();
 	//Contient le nombre de voiture a spawn pour chaque plage
 	private LinkedList<Integer> rawNum = new LinkedList<Integer>();
 	//Contient l'id d'une frontier et la proba associ� � celle-ci
@@ -28,30 +27,17 @@ public class Frontier extends Node implements ISimEntity {
 
 	public Frontier(int ID, BasicSimEngine engine, Environment e) {
 		super(ID, engine, e);
-		rawTime.add(LocalDateTime.of(2017, 1, 1, 0, 0));
-		rawTime.add(LocalDateTime.of(2017, 1, 1, 7, 0));
-		rawTime.add(LocalDateTime.of(2017, 1, 1, 9, 0));
-		rawTime.add(LocalDateTime.of(2017, 1, 1, 17, 0));
-		rawTime.add(LocalDateTime.of(2017, 1, 1, 19, 0));
-		rawTime.add(LocalDateTime.of(2017, 1, 2, 0, 0));
 
-		rawNum.add(100);
-		rawNum.add(100);
-		rawNum.add(100);
-		rawNum.add(100);
-		rawNum.add(100);
-		
-		/*addProba(5);
-		addProba(50);
-		addProba(0);
-		addProba(25);
-		addProba(20);	*/	
+		rawNum.add(15000);
+		rawNum.add(10000);
+		rawNum.add(10000);
+		rawNum.add(10000);
+		rawNum.add(10000);
 
-
-		generation();
+		engine.scheduleEventIn(this, Duration.ZERO, this::generation);
 	}
 
-	public void generation(){
+	public void generation(ISimEngine engine){
 		/*
 		 * La variable aleaGen indique si la génération est
 		 * déterministe (false) ou aléatoire (true)
@@ -59,7 +45,7 @@ public class Frontier extends Node implements ISimEntity {
 		boolean aleaGen = false;
 		
 		LocalDateTime beginSim = engine.getCurrentTime();
-		LocalDateTime endSim = engine.getCurrentTime().plus(engine.getSimuDuration());
+		LocalDateTime endSim = engine.getCurrentTime().plus(this.engine.getSimuDuration());
 		LocalDateTime l = engine.getCurrentTime();
 		Duration d = Duration.ZERO;
 		int numPlage = 0;
@@ -146,11 +132,7 @@ public class Frontier extends Node implements ISimEntity {
 		}
 		
 		//generation de la voiture
-		Car c = new Car(IDGenerator.getSelf().getNext(), this.engine, env, longueur, distSecu, this,(Frontier)env.getNode(dest));
-		/*if(lines != null)
-			lines.forEach((id,l) -> l.addCar(c));
-		else
-			engine.log(this, "pas de line connect�e");*/
+		new Car(IDGenerator.getSelf().getNext(), this.engine, env, longueur, distSecu, this,(Frontier)env.getNode(dest));
 	}
 
 	
@@ -162,19 +144,24 @@ public class Frontier extends Node implements ISimEntity {
 		distSecu = d;
 	}
 	public void addRawTime(LocalDateTime l){
-		rawTime.add(l);
+		if(rawTime.isEmpty()){
+			rawTime.add(l);
+			rawTime.add(l.plus(Duration.ofDays(1)));
+		}
+		else
+			rawTime.add(rawTime.size()-1, l);
 	}
 	public void addRawNum(int i){
 		rawNum.add(i);
 	}
-	public void addLine(int id, Line l){
+	public void addLine(Line l){
 		if(lines.isEmpty())
-			lines.put(id, l);
+			lines.put(l.getID(), l);
 		else
-			engine.log(this, ">>>>>>>>>>>>>>Probl�me d'ajout de line pour Frontier");
+			engine.log(this, ">>>>>>>>>>>>>>Probleme d'ajout de line pour Frontier");
 	}
 	/**
-	 * Proba a ajouter dans l'ordre en tenant compte de la proba 0 d'allersur soi-meme
+	 * Proba a ajouter dans l'ordre en tenant compte de la proba 0 d'aller sur soi-meme
 	 * @param p
 	 */
 	public void addProba(int p){

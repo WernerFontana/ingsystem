@@ -11,21 +11,14 @@ public class Line extends Entity implements ISimEntity {
 	private int longueur;
 	public final double largeur = 3;
 	private Node begin, end;
-	private int endType;
 	public final static int FEU=0,STOP=1,END=2,FREE=3;
 	
-	public Line(int ID, BasicSimEngine engine, Environment env, int longueur, Node begin, Node end, int endType){
+	public Line(int ID, BasicSimEngine engine, Environment env, int longueur, Node begin, Node end){
 		super(ID,engine,env);
 		this.longueur = longueur;
 		this.begin = begin;
 		this.end = end;
-		this.endType=endType;
 		cars = new LinkedList<Car>();
-	}
-	
-	public int getEndType()
-	{
-		return endType;
 	}
 	
 	public void addCar(Car c){
