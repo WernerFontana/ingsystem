@@ -22,7 +22,7 @@ public class Car extends Entity implements ISimEntity,Observer {
 	private LinkedList<Integer> behavior;
 
 	public final int vitesse = 50;
-	public final int timeCross = 5;
+	public final int timeCross = 2;
 
 	public Car(int id, BasicSimEngine engine, Environment env, double l, double d, Frontier begin, Frontier end){
 		super(id,engine,env);
@@ -103,7 +103,6 @@ public class Car extends Entity implements ISimEntity,Observer {
 
 	private void nextIterationOfCross(ISimEngine engine)
 	{
-	//	engine.log(this,"crossing");
 		Cross c = ((Cross)currentLine.getEnd());
 
 		Car isOccupied[] = c.getIsOccupied();
@@ -114,6 +113,10 @@ public class Car extends Entity implements ISimEntity,Observer {
 			if(behavior != null){
 				engine.scheduleEventIn(this, Duration.ofSeconds(timeCross), this::nextIterationOfCross);
 				c.deleteObserver(this);
+				for(Line l: path)
+				{
+					l.deleteObserver(this);
+				}
 				setChanged();
 				notifyObservers();
 				deleteObservers();
@@ -130,7 +133,7 @@ public class Car extends Entity implements ISimEntity,Observer {
 			if(!behavior.isEmpty() && behavior.size() > 1){
 				if(isOccupied[behavior.get(1)] == null){
 					c.deleteObserver(this);
-					c.tryPassing(behavior.get(1),this, behaviorSize, (behavior.get(1)+1)%3);
+					c.tryPassing(behavior.get(1),this, behaviorSize, (behavior.get(1)+1)%4);
 					//c.setIsOccupied(behavior.get(1),this);
 					behavior.removeFirst();
 					
