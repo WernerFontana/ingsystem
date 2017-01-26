@@ -42,7 +42,7 @@
 			"rightOut":14,
 			"bottomOut" : 0,
 			"leftOut" : 13,
-			"top":0,
+			"top":1,
 			"right":0,
 			"bottom" : 0,
 			"left" : 0,
@@ -60,7 +60,7 @@
 			"leftOut" : 15,
 			"top":0,
 			"right":0,
-			"bottom" : 0,
+			"bottom" : 1,
 			"left" : 0,
 			"type": 0
 		},
@@ -74,10 +74,10 @@
 			"rightOut":24,
 			"bottomOut" : 0,
 			"leftOut" : 23,
-			"top":0,
-			"right":0,
+			"top":2,
+			"right":2,
 			"bottom" : 0,
-			"left" : 0,
+			"left" : 2,
 			"type": 1
 		},
 		{
@@ -90,9 +90,9 @@
 			"rightOut":22,
 			"bottomOut" : 27,
 			"leftOut" : 21,
-			"top":0,
+			"top":1,
 			"right":0,
-			"bottom" : 0,
+			"bottom" : 1,
 			"left" : 0,
 			"type": 0
 		}

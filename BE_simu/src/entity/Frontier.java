@@ -28,11 +28,11 @@ public class Frontier extends Node implements ISimEntity {
 	public Frontier(int ID, BasicSimEngine engine, Environment e) {
 		super(ID, engine, e);
 
-		rawNum.add(15000);
-		rawNum.add(10000);
-		rawNum.add(10000);
-		rawNum.add(10000);
-		rawNum.add(10000);
+		rawNum.add(15);
+		rawNum.add(10);
+		rawNum.add(10);
+		rawNum.add(10);
+		rawNum.add(10);
 
 		engine.scheduleEventIn(this, Duration.ZERO, this::generation);
 	}

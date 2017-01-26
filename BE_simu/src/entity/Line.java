@@ -12,6 +12,7 @@ public class Line extends Entity implements ISimEntity {
 	public final double largeur = 3;
 	private Node begin, end;
 	public final static int FEU=0,STOP=1,END=2,FREE=3;
+	private boolean outFree=true;
 	
 	public Line(int ID, BasicSimEngine engine, Environment env, int longueur, Node begin, Node end){
 		super(ID,engine,env);
@@ -59,4 +60,14 @@ public class Line extends Entity implements ISimEntity {
 		return s;
 	}
 	
+	public boolean isOutFree()
+	{
+		return outFree;
+	}
+	
+	public void setOutFree(boolean b)
+	{
+		this.outFree=b;
+		this.notifyObservers();
+	}
 }
