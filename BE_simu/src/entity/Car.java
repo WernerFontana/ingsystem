@@ -18,6 +18,7 @@ public class Car extends Entity implements ISimEntity,Observer {
 	private Line currentLine;
 	private int currentIndex;
 	private int behaviorSize;
+	private boolean waitLine=false;
 
 	private LinkedList<Integer> behavior;
 
@@ -61,6 +62,14 @@ public class Car extends Entity implements ISimEntity,Observer {
 		else if(arg0 instanceof Car){
 			engine.scheduleEventIn(this, Duration.ofSeconds((long)(longueur+distSecu)/14), this::checkNode);
 		}
+		else if(arg0 instanceof Line)
+		{
+			if(waitLine)checkNode(engine);			
+		}
+		else if(arg0 instanceof Light)
+		{
+			checkNode(engine);
+		}
 	}
 
 	private void addToNextLine(){
@@ -103,54 +112,50 @@ public class Car extends Entity implements ISimEntity,Observer {
 
 	private void nextIterationOfCross(ISimEngine engine)
 	{
-		Cross c = ((Cross)currentLine.getEnd());
-
-		Car isOccupied[] = c.getIsOccupied();
-		if(behavior == null){
-			behavior = c.dealWithIt(this);
-			
-			//si le behavior est different de null, on est entrer dans la cross
-			if(behavior != null){
-				engine.scheduleEventIn(this, Duration.ofSeconds(timeCross), this::nextIterationOfCross);
-				c.deleteObserver(this);
-				for(Line l: path)
-				{
-					l.deleteObserver(this);
-				}
-				setChanged();
-				notifyObservers();
-				deleteObservers();
-				behaviorSize = behavior.size();
-				currentLine.setOutFree(true);
-			}
-			else{
-				c.addObserver(this);
-			}
-		}
-		//la voiture est déjà dans la cross
-		else{
-			//si la voiture doit encore parcourir l'intersection
-			if(!behavior.isEmpty() && behavior.size() > 1){
-				if(isOccupied[behavior.get(1)] == null){
-					c.deleteObserver(this);
-					c.tryPassing(behavior.get(1),this, behaviorSize, (behavior.get(1)+1)%4);
-					//c.setIsOccupied(behavior.get(1),this);
-					behavior.removeFirst();
-					
+			Cross c = ((Cross)currentLine.getEnd());
+			Car isOccupied[] = c.getIsOccupied();
+			if(behavior == null){
+				behavior = c.dealWithIt(this);
+				
+				//si le behavior est different de null, on est entrer dans la cross
+				if(behavior != null){
+					setWaitLine(false);
+					currentLine.setOutFree(true);
 					engine.scheduleEventIn(this, Duration.ofSeconds(timeCross), this::nextIterationOfCross);
+					c.deleteObserver(this);
+					setChanged();
+					notifyObservers();
+					deleteObservers();
+					behaviorSize = behavior.size();
+					
 				}
 				else{
 					c.addObserver(this);
 				}
 			}
-			//si la voiture doit sortir
+			//la voiture est déjà dans la cross
 			else{
-				c.deleteObserver(this);
-				addToNextLine();
-				c.setIsOccupied(behavior.get(0),null);
-				behavior = null;
+				//si la voiture doit encore parcourir l'intersection
+				if(!behavior.isEmpty() && behavior.size() > 1){
+					if(isOccupied[behavior.get(1)] == null){
+						c.deleteObserver(this);
+						c.tryPassing(behavior.get(1),this, behaviorSize, (behavior.get(1)+1)%4);
+						behavior.removeFirst();
+						
+						engine.scheduleEventIn(this, Duration.ofSeconds(timeCross), this::nextIterationOfCross);
+					}
+					else{
+						c.addObserver(this);
+					}
+				}
+				//si la voiture doit sortir
+				else{
+					c.deleteObserver(this);
+					addToNextLine();
+					c.setIsOccupied(behavior.get(0),null);
+					behavior = null;
+				}
 			}
-		}
 	}
 
 	public void endTrip()
@@ -197,5 +202,10 @@ public class Car extends Entity implements ISimEntity,Observer {
 		}
 
 	}*/
+	
+	public void setWaitLine(boolean b)
+	{
+		waitLine = b;
+	}
 
 }

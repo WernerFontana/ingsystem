@@ -24,7 +24,7 @@ public class Checker {
 		for(Line l : env.getLines().values()){
 			if(!l.getCars().isEmpty()){
 				System.out.println("Car in Line : KO");
-				System.out.println(l+"            "+l.getCars());
+				System.out.println(l+"            "+l.getCars().size());
 				b = true;
 				break;
 			}

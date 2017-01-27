@@ -37,13 +37,12 @@ public class Cross extends Node implements ISimEntity {
 			if (this.isLineEmpty(i)) {
 				setIsOccupied(i, c);
 			} else {
-				setIsOccupied(i,null);
+				//setIsOccupied(i,null);
 				this.addLineObserver(i, c);
 			}
 		} else {
 			setIsOccupied(i, c);
-		}
-*/
+		}*/
 	}
 
 	public boolean setIsOccupied(int i, Car c) {
@@ -115,6 +114,30 @@ public LinkedList<Integer> Go(Car c, LinkedList<Integer> p)
 	}
 	return null;
 }
+
+public void removeAllLineObserver(Car c)
+{
+	removeLineObserver(c,env.getLine(top.in()));
+	removeLineObserver(c,env.getLine(top.out()));
+	removeLineObserver(c,env.getLine(bottom.in()));
+	removeLineObserver(c,env.getLine(bottom.out()));
+	removeLineObserver(c,env.getLine(right.in()));
+	removeLineObserver(c,env.getLine(right.out()));
+	removeLineObserver(c,env.getLine(left.in()));
+	removeLineObserver(c,env.getLine(left.out()));
+	
+}
+public void removeLineObserver(Car c, Line l)
+{
+	try
+	{
+		l.deleteObserver(c);
+	}
+	catch(NullPointerException e)
+	{
+		//pas de ligne pas d'observeur a supprimer
+	}
+}
 	public LinkedList<Integer> dealWithIt(Car c) {
 		int pathType;
 		int ID = convertNodeCross(c.getCurrentLine().getID());
@@ -125,19 +148,21 @@ public LinkedList<Integer> Go(Car c, LinkedList<Integer> p)
 		case 0:// rien : methode getWay on applique la priorité
 			return Go(c,p);
 		case 1:// stop : les stops sont par deux
-				if (!stop(p.size(), ID, c)) {
+			c.setWaitLine(true);
+			if (!stop(p.size(), ID, c)) {
 				return null;
 			}
+			removeAllLineObserver(c);
 			return Go(c,p);
 		case 2:// feu : les intersections sont toujours pleines de feux
 			// le cas ou l'on tourne a droite est géré au moment ou la
 			// voiture doit tourner et non au debut
-			if (light.getLightByID(ID) == Light.GREEN) {
+		/*	if (light.getLightByID(ID) == Light.GREEN) {
 				light.deleteObserver(c);
 				return Go(c,p);
 			}
-			light.addObserver(c);
-			return null;
+			light.addObserver(c);*/
+			return Go(c,p);
 		}
 		}
 		return null;
@@ -180,7 +205,7 @@ public LinkedList<Integer> Go(Car c, LinkedList<Integer> p)
 		switch (pathSize) {
 		case 1:
 			// on cede le passage a notre gauche
-			if (isLineEmpty((ID + 3) %4)) {
+			if (isLineEmpty((ID + 3) %4) && isOccupied[(ID + 3) %4]==null) {
 				return true;
 			} else {
 				addLineObserver((ID + 3) %4, c);
@@ -189,7 +214,7 @@ public LinkedList<Integer> Go(Car c, LinkedList<Integer> p)
 		default:
 			// on cede le passage a gauche et droite (cas ou l'on va tout droit
 			// ou si on tourne a droite)
-			if (isLineEmpty((ID + 3) % 4) && isLineEmpty((ID + 1) % 4)) {
+			if (isLineEmpty((ID + 3) % 4) && isLineEmpty((ID + 1) % 4) && isOccupied[(ID + 3) %4]==null) {
 				return true;
 			} else {
 				addLineObserver((ID + 3) % 4, c);
