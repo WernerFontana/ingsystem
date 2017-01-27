@@ -23,7 +23,7 @@ public class Car extends Entity implements ISimEntity, Observer {
 	private LinkedList<Integer> behavior;
 
 	public final int vitesse = 50;
-	private final int timeCross = 0;
+	private final int timeCross = 2;
 
 	public Car(int id, BasicSimEngine engine, Environment env, double l, double d, Frontier begin, Frontier end) {
 		super(id, engine, env);
@@ -57,10 +57,13 @@ public class Car extends Entity implements ISimEntity, Observer {
 					}
 				}
 			} else if (arg0 instanceof Car) {
+				if (!atLight)
 				engine.scheduleEventIn(this, Duration.ofSeconds((long) (longueur + distSecu) / 14), this::checkNode);
 			} else if (arg0 instanceof Line) {
+				if (!atLight)
 					checkNode(engine);
 			} else if (arg0 instanceof Light) {
+				if(atLight)
 				checkNode(engine);
 			}
 		}
@@ -103,7 +106,6 @@ public class Car extends Entity implements ISimEntity, Observer {
 		Car isOccupied[] = c.getIsOccupied();
 		if (behavior == null) {
 			behavior = c.dealWithIt(this);
-
 			// si le behavior est different de null, on est entrer dans la cross
 			if (behavior != null) {
 				currentLine.setOutFree(true);
@@ -114,7 +116,6 @@ public class Car extends Entity implements ISimEntity, Observer {
 				notifyObservers();
 				deleteObservers();
 				behaviorSize = behavior.size();
-
 			} else {
 				c.addObserver(this);
 			}
@@ -124,10 +125,10 @@ public class Car extends Entity implements ISimEntity, Observer {
 			// si la voiture doit encore parcourir l'intersection
 			if (!behavior.isEmpty() && behavior.size() > 1) {
 				if (isOccupied[behavior.get(1)] == null) {
+					isCrossing = true;
 					c.deleteObserver(this);
 					c.tryPassing(behavior.get(1), this, behaviorSize, (behavior.get(1) + 1) % 4);
-					behavior.removeFirst();
-					isCrossing = true;
+					behavior.removeFirst();					
 					engine.scheduleEventIn(this, Duration.ofSeconds(timeCross), this::nextIterationOfCross);
 				} else {
 					c.addObserver(this);

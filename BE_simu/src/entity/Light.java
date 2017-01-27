@@ -2,8 +2,6 @@ package entity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-
-import engine.ISimEngine;
 import engine.ISimEntity;
 import engine.impl.BasicSimEngine;
 
@@ -27,67 +25,67 @@ public class Light extends Entity implements ISimEntity {
 	}
 	
 	public int getLightByID(int id, Car c)
-		{long time =(convertLocalDateTimeToInt(engine.getCurrentTime())-startTime)%140;
+		{long time =(convertLocalDateTimeToInt(engine.getCurrentTime())-startTime)%160;
 			switch(id)
 			{
 			case 0:
-				if(time<=30)
+				if(time>5 && time<=35)
 				{
 					return GREEN;
 				}
-				else if(time>30 && time<=35)
+				else if(time>35 && time<=40)
 				{
 					return ORANGE;
 				}
 				else
 				{	
 					c.setAtLight(true);
-					engine.scheduleEventIn(this, Duration.ofSeconds(140-time), c::checkNode);
+					engine.scheduleEventIn(this, Duration.ofSeconds(160-time+6), c::checkNode);
 					return RED;
 				}
 			case 1:
-				if(time>35 && time<=65)
+				if(time>45 && time<=75)
 				{
 					return GREEN;
 				}
-				else if(time>65 && time<=70)
+				else if(time>75 && time<=80)
 				{
 					return ORANGE;
 				}
 				else
 				{
 					c.setAtLight(true);
-					engine.scheduleEventIn(this, Duration.ofSeconds(140-time+36), c::checkNode);
+					engine.scheduleEventIn(this, Duration.ofSeconds(160-time+46), c::checkNode);
 					return RED;
 				}
 			case 2:
-				if(time>70 && time<=100)
+				if(time>85 && time<=115)
 				{
 					return GREEN;
 				}
-				else if(time>100 && time<=105)
+				else if(time>115 && time<=120)
 				{
 					return ORANGE;
 				}
 				else
 				{
 					c.setAtLight(true);
-					engine.scheduleEventIn(this, Duration.ofSeconds(140-time+71), c::checkNode);
+					engine.scheduleEventIn(this, Duration.ofSeconds(160-time+86), c::checkNode);
 					return RED;
 				}
 			case 3:
-				if(time>105 && time<=135)
+				if(time>125 && time<=155)
 				{
 					return GREEN;
 				}
-				else if(time>135 && time<=140)
+				else if(time>155 && time<=160)
 				{
 					return ORANGE;
 				}
 				else
 				{
 					c.setAtLight(true);
-					engine.scheduleEventIn(this, Duration.ofSeconds(140-time+106), c::checkNode);
+					engine.scheduleEventIn(this, Duration.ofSeconds(160-time+126), c::checkNode);
 					return RED;
 				}
 			}
@@ -95,10 +93,4 @@ public class Light extends Entity implements ISimEntity {
 			System.exit(-1);
 			return -1;
 		}
-	
-	private void isGreen(ISimEngine engine)
-	{
-		this.setChanged();
-		this.notifyObservers();
-	}
 }

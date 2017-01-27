@@ -3,7 +3,6 @@ package entity;
 import java.time.Duration;
 import java.util.LinkedList;
 
-import container.CrossPathContainer;
 import engine.ISimEngine;
 import engine.ISimEntity;
 import engine.impl.BasicSimEngine;
@@ -33,16 +32,12 @@ public class Cross extends Node implements ISimEntity {
 
 	public void tryPassing(int i, Car c, int pathSize, int rightID) {
 		setIsOccupied(i, c);
-		/*if ((pathSize == 3) && (getTypeFromID(i) == NONE)) {
-			if (this.isLineEmpty(i)) {
-				setIsOccupied(i, c);
-			} else {
-				//setIsOccupied(i,null);
-				this.addLineObserver(i, c);
-			}
-		} else {
-			setIsOccupied(i, c);
-		}*/
+		/*
+		 * if ((pathSize == 3) && (getTypeFromID(i) == NONE)) { if
+		 * (this.isLineEmpty(i)) { setIsOccupied(i, c); } else {
+		 * //setIsOccupied(i,null); this.addLineObserver(i, c); } } else {
+		 * setIsOccupied(i, c); }
+		 */
 	}
 
 	public boolean setIsOccupied(int i, Car c) {
@@ -106,64 +101,63 @@ public class Cross extends Node implements ISimEntity {
 		}
 
 	}
-public LinkedList<Integer> Go(Car c, LinkedList<Integer> p)
-{
-	if(setIsOccupied(p.getFirst(), c))
-	{
-		return p;
-	}
-	return null;
-}
 
-public void removeAllLineObserver(Car c)
-{
-	removeLineObserver(c,env.getLine(top.in()));
-	removeLineObserver(c,env.getLine(top.out()));
-	removeLineObserver(c,env.getLine(bottom.in()));
-	removeLineObserver(c,env.getLine(bottom.out()));
-	removeLineObserver(c,env.getLine(right.in()));
-	removeLineObserver(c,env.getLine(right.out()));
-	removeLineObserver(c,env.getLine(left.in()));
-	removeLineObserver(c,env.getLine(left.out()));
-	
-}
-public void removeLineObserver(Car c, Line l)
-{
-	try
-	{
-		l.deleteObserver(c);
+	public LinkedList<Integer> Go(Car c, LinkedList<Integer> p) {
+		if (setIsOccupied(p.getFirst(), c)) {
+			return p;
+		}
+		return null;
 	}
-	catch(NullPointerException e)
-	{
-		//pas de ligne pas d'observeur a supprimer
+
+	public void removeAllLineObserver(Car c) {
+		removeLineObserver(c, env.getLine(top.in()));
+		removeLineObserver(c, env.getLine(top.out()));
+		removeLineObserver(c, env.getLine(bottom.in()));
+		removeLineObserver(c, env.getLine(bottom.out()));
+		removeLineObserver(c, env.getLine(right.in()));
+		removeLineObserver(c, env.getLine(right.out()));
+		removeLineObserver(c, env.getLine(left.in()));
+		removeLineObserver(c, env.getLine(left.out()));
+
 	}
-}
+
+	public void removeLineObserver(Car c, Line l) {
+		try {
+			l.deleteObserver(c);
+		} catch (NullPointerException e) {
+			// pas de ligne pas d'observeur a supprimer
+		}
+	}
+
 	public LinkedList<Integer> dealWithIt(Car c) {
 		int pathType;
 		int ID = convertNodeCross(c.getCurrentLine().getID());
-		LinkedList<Integer> p= getBehavior(c);
-		pathType =getTypeFromID(ID);
+		LinkedList<Integer> p = getBehavior(c);
+		pathType = getTypeFromID(ID);
 		if (isAvailable()) {
-		switch (pathType) {
-		case 0:// rien : methode getWay on applique la priorité
-			return Go(c,p);
-		case 1:// stop : les stops sont par deux
-			if (!stop(p.size(), ID, c)) {
-				return null;
+			switch (pathType) {
+			case 0:// rien : methode getWay on applique la priorité
+				return Go(c, p);
+			case 1:// stop : les stops sont par deux
+				/*
+				 * if (!stop(p.size(), ID, c)) { return null; }
+				 * removeAllLineObserver(c);
+				 */
+				return Go(c, p);
+			case 2:// feu : les intersections sont toujours pleines de feux
+					// le cas ou l'on tourne a droite est géré au moment ou la
+					// voiture doit tourner et non au debut
+				int i = light.getLightByID(ID, c);
+				if (i == Light.GREEN|| i==Light.ORANGE) {
+					LinkedList<Integer> tmp = Go(c, p);
+					if (tmp != null) {
+						light.deleteObserver(c);						
+					}
+					c.setAtLight(false);
+					return tmp;
+				}
+				light.addObserver(c);
 			}
-			removeAllLineObserver(c);
-			return Go(c,p);
-		case 2:// feu : les intersections sont toujours pleines de feux
-			// le cas ou l'on tourne a droite est géré au moment ou la
-			// voiture doit tourner et non au debut
-			int i=light.getLightByID(ID,c);
-			if (i == Light.GREEN) {
-				light.deleteObserver(c);
-				c.setAtLight(false);
-				return Go(c,p);
-			}
-			light.addObserver(c);
-		}
 		}
 		return null;
 	}
@@ -205,16 +199,16 @@ public void removeLineObserver(Car c, Line l)
 		switch (pathSize) {
 		case 1:
 			// on cede le passage a notre gauche
-			if (isLineEmpty((ID + 3) %4) && isOccupied[(ID + 3) %4]==null) {
+			if (isLineEmpty((ID + 3) % 4) && isOccupied[(ID + 3) % 4] == null) {
 				return true;
 			} else {
-				addLineObserver((ID + 3) %4, c);
+				addLineObserver((ID + 3) % 4, c);
 				return false;
 			}
 		default:
 			// on cede le passage a gauche et droite (cas ou l'on va tout droit
 			// ou si on tourne a droite)
-			if (isLineEmpty((ID + 3) % 4) && isLineEmpty((ID + 1) % 4) && isOccupied[(ID + 3) %4]==null) {
+			if (isLineEmpty((ID + 3) % 4) && isLineEmpty((ID + 1) % 4) && isOccupied[(ID + 3) % 4] == null) {
 				return true;
 			} else {
 				addLineObserver((ID + 3) % 4, c);
@@ -253,64 +247,64 @@ public void removeLineObserver(Car c, Line l)
 
 	public LinkedList<Integer> getBehavior(Car c) {
 		LinkedList<Integer> l = new LinkedList<>();
-			if (c.getCurrentLine().getID() == top.in()) {
-				if (c.getPath().get(c.getCurrentIndex() + 1).getID() == right.out()) {
-					l.add(0);
-					l.add(1);
-					l.add(2);
-				} else if (c.getPath().get(c.getCurrentIndex() + 1).getID() == bottom.out()) {
-					l.add(0);
-					l.add(1);
-				} else if (c.getPath().get(c.getCurrentIndex() + 1).getID() == left.out()) {
-					l.add(0);
-				} else {
-					System.out.println("------------------------------------------------>Problème : " + top.in() + "|"
-							+ c.getPath().get(c.getCurrentIndex()).getID());
-				}
-			} else if (c.getCurrentLine().getID() == right.in()) {
-				if (c.getPath().get(c.getCurrentIndex() + 1).getID() == top.out()) {
-					l.add(3);
-				} else if (c.getPath().get(c.getCurrentIndex() + 1).getID() == bottom.out()) {
-					l.add(3);
-					l.add(0);
-					l.add(1);
-				} else if (c.getPath().get(c.getCurrentIndex() + 1).getID() == left.out()) {
-					l.add(3);
-					l.add(0);
-				} else {
-					System.out.println("------------------------------------------------>Problème : " + right.in() + "|"
-							+ c.getPath().get(c.getCurrentIndex()).getID());
-				}
-			} else if (c.getCurrentLine().getID() == left.in()) {
-				if (c.getPath().get(c.getCurrentIndex() + 1).getID() == top.out()) {
-					l.add(1);
-					l.add(2);
-					l.add(3);
-				} else if (c.getPath().get(c.getCurrentIndex() + 1).getID() == bottom.out()) {
-					l.add(1);
-				} else if (c.getPath().get(c.getCurrentIndex() + 1).getID() == right.out()) {
-					l.add(1);
-					l.add(2);
-				} else {
-					System.out.println("------------------------------------------------>Problème : " + left.in() + "|"
-							+ c.getPath().get(c.getCurrentIndex()).getID());
-				}
-			} else if (c.getCurrentLine().getID() == bottom.in()) {
-				if (c.getPath().get(c.getCurrentIndex() + 1).getID() == top.out()) {
-					l.add(2);
-					l.add(3);
-				} else if (c.getPath().get(c.getCurrentIndex() + 1).getID() == left.out()) {
-					l.add(2);
-					l.add(3);
-					l.add(0);
-				} else if (c.getPath().get(c.getCurrentIndex() + 1).getID() == right.out()) {
-					l.add(2);
-				} else {
-					System.out.println("------------------------------------------------>Problème : " + bottom.in()
-					+ "|" + c.getPath().get(c.getCurrentIndex()).getID());
-				}
+		if (c.getCurrentLine().getID() == top.in()) {
+			if (c.getPath().get(c.getCurrentIndex() + 1).getID() == right.out()) {
+				l.add(0);
+				l.add(1);
+				l.add(2);
+			} else if (c.getPath().get(c.getCurrentIndex() + 1).getID() == bottom.out()) {
+				l.add(0);
+				l.add(1);
+			} else if (c.getPath().get(c.getCurrentIndex() + 1).getID() == left.out()) {
+				l.add(0);
+			} else {
+				System.out.println("------------------------------------------------>Problème : " + top.in() + "|"
+						+ c.getPath().get(c.getCurrentIndex()).getID());
 			}
-			return l;
+		} else if (c.getCurrentLine().getID() == right.in()) {
+			if (c.getPath().get(c.getCurrentIndex() + 1).getID() == top.out()) {
+				l.add(3);
+			} else if (c.getPath().get(c.getCurrentIndex() + 1).getID() == bottom.out()) {
+				l.add(3);
+				l.add(0);
+				l.add(1);
+			} else if (c.getPath().get(c.getCurrentIndex() + 1).getID() == left.out()) {
+				l.add(3);
+				l.add(0);
+			} else {
+				System.out.println("------------------------------------------------>Problème : " + right.in() + "|"
+						+ c.getPath().get(c.getCurrentIndex()).getID());
+			}
+		} else if (c.getCurrentLine().getID() == left.in()) {
+			if (c.getPath().get(c.getCurrentIndex() + 1).getID() == top.out()) {
+				l.add(1);
+				l.add(2);
+				l.add(3);
+			} else if (c.getPath().get(c.getCurrentIndex() + 1).getID() == bottom.out()) {
+				l.add(1);
+			} else if (c.getPath().get(c.getCurrentIndex() + 1).getID() == right.out()) {
+				l.add(1);
+				l.add(2);
+			} else {
+				System.out.println("------------------------------------------------>Problème : " + left.in() + "|"
+						+ c.getPath().get(c.getCurrentIndex()).getID());
+			}
+		} else if (c.getCurrentLine().getID() == bottom.in()) {
+			if (c.getPath().get(c.getCurrentIndex() + 1).getID() == top.out()) {
+				l.add(2);
+				l.add(3);
+			} else if (c.getPath().get(c.getCurrentIndex() + 1).getID() == left.out()) {
+				l.add(2);
+				l.add(3);
+				l.add(0);
+			} else if (c.getPath().get(c.getCurrentIndex() + 1).getID() == right.out()) {
+				l.add(2);
+			} else {
+				System.out.println("------------------------------------------------>Problème : " + bottom.in() + "|"
+						+ c.getPath().get(c.getCurrentIndex()).getID());
+			}
+		}
+		return l;
 	}
 
 }
