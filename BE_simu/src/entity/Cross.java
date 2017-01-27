@@ -142,13 +142,12 @@ public void removeLineObserver(Car c, Line l)
 		int pathType;
 		int ID = convertNodeCross(c.getCurrentLine().getID());
 		LinkedList<Integer> p= getBehavior(c);
-		pathType =0;//getTypeFromID(ID);
+		pathType =getTypeFromID(ID);
 		if (isAvailable()) {
 		switch (pathType) {
 		case 0:// rien : methode getWay on applique la priorité
 			return Go(c,p);
 		case 1:// stop : les stops sont par deux
-			c.setWaitLine(true);
 			if (!stop(p.size(), ID, c)) {
 				return null;
 			}
@@ -157,12 +156,13 @@ public void removeLineObserver(Car c, Line l)
 		case 2:// feu : les intersections sont toujours pleines de feux
 			// le cas ou l'on tourne a droite est géré au moment ou la
 			// voiture doit tourner et non au debut
-		/*	if (light.getLightByID(ID) == Light.GREEN) {
+			int i=light.getLightByID(ID,c);
+			if (i == Light.GREEN) {
 				light.deleteObserver(c);
+				c.setAtLight(false);
 				return Go(c,p);
 			}
-			light.addObserver(c);*/
-			return Go(c,p);
+			light.addObserver(c);
 		}
 		}
 		return null;

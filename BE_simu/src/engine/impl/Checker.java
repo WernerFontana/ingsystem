@@ -26,7 +26,6 @@ public class Checker {
 				System.out.println("Car in Line : KO");
 				System.out.println(l+"            "+l.getCars().size());
 				b = true;
-				break;
 			}
 		}
 		if(!b)

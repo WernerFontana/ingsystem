@@ -20,7 +20,7 @@ public class IDGenerator {
 			}
 		}
 		carNumber=(int) (carNumber*1.3);
-		carNumber = 380000;
+		carNumber = 50000;
 		IDList = new LinkedList<>();
 		for(int i =0;i<carNumber;i++)
 		{

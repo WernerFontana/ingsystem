@@ -26,7 +26,7 @@ public class Light extends Entity implements ISimEntity {
 		return (t.getDayOfWeek().getValue()-1)*604800+t.getHour()*3600+t.getMinute()*60+t.getSecond();
 	}
 	
-	public int getLightByID(int id)
+	public int getLightByID(int id, Car c)
 		{long time =(convertLocalDateTimeToInt(engine.getCurrentTime())-startTime)%140;
 			switch(id)
 			{
@@ -41,7 +41,8 @@ public class Light extends Entity implements ISimEntity {
 				}
 				else
 				{	
-					engine.scheduleEventIn(this, Duration.ofSeconds(141-time), this::isGreen);
+					c.setAtLight(true);
+					engine.scheduleEventIn(this, Duration.ofSeconds(140-time), c::checkNode);
 					return RED;
 				}
 			case 1:
@@ -55,7 +56,8 @@ public class Light extends Entity implements ISimEntity {
 				}
 				else
 				{
-					engine.scheduleEventIn(this, Duration.ofSeconds((176-time)%140), this::isGreen);
+					c.setAtLight(true);
+					engine.scheduleEventIn(this, Duration.ofSeconds(140-time+36), c::checkNode);
 					return RED;
 				}
 			case 2:
@@ -69,7 +71,8 @@ public class Light extends Entity implements ISimEntity {
 				}
 				else
 				{
-					engine.scheduleEventIn(this, Duration.ofSeconds((211-time)%140), this::isGreen);
+					c.setAtLight(true);
+					engine.scheduleEventIn(this, Duration.ofSeconds(140-time+71), c::checkNode);
 					return RED;
 				}
 			case 3:
@@ -83,7 +86,8 @@ public class Light extends Entity implements ISimEntity {
 				}
 				else
 				{
-					engine.scheduleEventIn(this, Duration.ofSeconds((246-time)%140), this::isGreen);
+					c.setAtLight(true);
+					engine.scheduleEventIn(this, Duration.ofSeconds(140-time+106), c::checkNode);
 					return RED;
 				}
 			}
