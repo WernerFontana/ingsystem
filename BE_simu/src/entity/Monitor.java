@@ -16,12 +16,13 @@ public class Monitor {
 	
 	public static void main(String [] args) {
 		final LocalDateTime debut = LocalDateTime.now();
+		int i=0,k=0;
 		
-		BasicSimEngine engine = new BasicSimEngine();
 		final LocalDateTime startTime = LocalDateTime.of(2017, 1, 1, 0, 0);
 		final Duration duration = Duration.ofHours(24);
-		
-		
+		for(i=0;i<500;i++)
+		{
+		BasicSimEngine engine = new BasicSimEngine();
 		engine.getLoggerHub().addLogger(new SysOutLogger());
 		engine.initialize(startTime,duration);
 		
@@ -37,12 +38,15 @@ public class Monitor {
 		engine.getLoggerHub().terminate();
 		
 		Checker c = new Checker(engine,env);
-		c.check();
+		if(!c.check())
+			{
+			k++;
+			}
 		
 		System.out.println("Date de fin de simulation : "+engine.getCurrentTime());
 		
 		System.out.println("Durée de simulation : "+Duration.between(debut, LocalDateTime.now()));
-		
+		System.err.println(k+"/"+(i+1));
 		//env.getLines().forEach((i,l) -> System.out.println(i+" : "+l.getCars()));
 		
 		/*env.getNodes().forEach((i,n) -> {
@@ -57,7 +61,7 @@ public class Monitor {
 		
 		//Fermeture du fichier de conf
 		Prop.self.close();
-		
+	}
 	}
 	
 }

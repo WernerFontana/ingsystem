@@ -16,9 +16,9 @@ public class Checker {
 		this.engine = engine;
 	}
 	
-	public void check(){
+	public boolean check(){
 		System.out.println("end/gen : "+env.getNbCarEnd()+"/"+env.getNbCarGen());
-		
+		boolean r=false;
 		
 		boolean b = false;
 		for(Line l : env.getLines().values()){
@@ -26,6 +26,7 @@ public class Checker {
 				System.out.println("Car in Line : KO");
 				System.out.println(l+"            "+l.getCars().size());
 				b = true;
+				r = true;
 			}
 		}
 		if(!b)
@@ -44,14 +45,18 @@ public class Checker {
 		}
 		if(!b)
 			System.out.println("Car in Cross : OK");
-		else
+		else{
 			System.out.println("Car in Cross : KO");
-		
-		
+			r = true;
+		}
 		if(engine.getEventQueue().isEmpty())
 			System.out.println("Event to process : OK");
 		else
-			System.out.println("Event to process : KO");
+		{
+		System.out.println("Event to process : KO");
+		r=true;
+		}
+		return r;
 	}
 
 }

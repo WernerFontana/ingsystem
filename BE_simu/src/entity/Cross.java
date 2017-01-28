@@ -2,6 +2,7 @@ package entity;
 
 import java.time.Duration;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 import engine.ISimEngine;
 import engine.ISimEntity;
@@ -15,6 +16,7 @@ public class Cross extends Node implements ISimEntity {
 	private LinkedList<Car> updateList = new LinkedList<>();
 	public final int NONE = 0, STOP = 1, FEU = 2;
 	private Light light;
+	private final int noticeTime =0;
 
 	public Cross(int id, BasicSimEngine engine, Environment env, CrossEntry top, CrossEntry right, CrossEntry bottom,
 			CrossEntry left) {
@@ -30,14 +32,18 @@ public class Cross extends Node implements ISimEntity {
 		light = new Light(id, engine, env);
 	}
 
-	public void tryPassing(int i, Car c, int pathSize, int rightID) {
+	public void tryPassing(int i, Car c, int pathSize) {
 		setIsOccupied(i, c);
 		/*
-		 * if ((pathSize == 3) && (getTypeFromID(i) == NONE)) { if
-		 * (this.isLineEmpty(i)) { setIsOccupied(i, c); } else {
-		 * //setIsOccupied(i,null); this.addLineObserver(i, c); } } else {
-		 * setIsOccupied(i, c); }
-		 */
+		if ((pathSize == 3) && (getTypeFromID(i) == NONE)) {
+			if (this.isLineEmpty(i)) {
+				setIsOccupied(i, c);
+			} else {
+				this.addLineObserver(i, c);
+			}
+		} else {
+			setIsOccupied(i, c);
+		}*/
 	}
 
 	public boolean setIsOccupied(int i, Car c) {
@@ -49,7 +55,7 @@ public class Cross extends Node implements ISimEntity {
 				}
 				isOccupied[i] = c;
 				updateList.add(c);
-				engine.scheduleEventIn(this, Duration.ZERO, this::updateEvent);
+				engine.scheduleEventIn(this, Duration.ofSeconds(noticeTime), this::updateEvent);
 				return true;
 			} else {
 				return false;
@@ -58,7 +64,7 @@ public class Cross extends Node implements ISimEntity {
 			Car car = isOccupied[i];
 			isOccupied[i] = c;
 			updateList.add(car);
-			engine.scheduleEventIn(this, Duration.ZERO, this::updateEvent);
+			engine.scheduleEventIn(this,  Duration.ofSeconds(noticeTime), this::updateEvent);
 			return true;
 		}
 	}
@@ -104,6 +110,9 @@ public class Cross extends Node implements ISimEntity {
 
 	public LinkedList<Integer> Go(Car c, LinkedList<Integer> p) {
 		if (setIsOccupied(p.getFirst(), c)) {
+			c.setAtStop(false);
+			c.setAtLight(false);
+			removeAllLineObserver(c);
 			return p;
 		}
 		return null;
@@ -139,24 +148,19 @@ public class Cross extends Node implements ISimEntity {
 			case 0:// rien : methode getWay on applique la priorité
 				return Go(c, p);
 			case 1:// stop : les stops sont par deux
-				/*
-				 * if (!stop(p.size(), ID, c)) { return null; }
-				 * removeAllLineObserver(c);
-				 */
-				return Go(c, p);
-			case 2:// feu : les intersections sont toujours pleines de feux
-					// le cas ou l'on tourne a droite est géré au moment ou la
-					// voiture doit tourner et non au debut
-				int i = light.getLightByID(ID, c);
-				if (i == Light.GREEN|| i==Light.ORANGE) {
-					LinkedList<Integer> tmp = Go(c, p);
-					if (tmp != null) {
-						light.deleteObserver(c);						
+				c.setAtStop(true);
+					if (!stop(getTypeFromID(ID), ID, c)) {
+						return null;
 					}
-					c.setAtLight(false);
+					return Go(c, p);
+			case 2:// feu : les intersections sont toujours pleines de feux
+				// le cas ou l'on tourne a droite est géré au moment ou la
+				// voiture doit tourner et non au debut
+				int i = light.getLightByID(ID, c);
+				if (i == Light.GREEN || i == Light.ORANGE) {
+					LinkedList<Integer> tmp = Go(c, p);
 					return tmp;
 				}
-				light.addObserver(c);
 			}
 		}
 		return null;
@@ -177,11 +181,17 @@ public class Cross extends Node implements ISimEntity {
 	}
 
 	public boolean isLineEmpty(int ID) {
-		try {
-			return env.getLine(convertCrossNode(ID)).isOutFree();
+		try {Line l =env.getLine(convertCrossNode(ID));
+			boolean r = l.getCars().getFirst().getArrivalTime().compareTo(engine.getCurrentTime().minusSeconds(l.getLongueur()/14-500))<0;
+			return r;
 		} catch (NullPointerException e) {
 			return true;// si il n'y a pas de voie existante pas de priorité a
 			// laisser
+		}
+		catch (NoSuchElementException e)
+		{
+			//pas de voiture, on peut passer
+			return true;
 		}
 
 	}
@@ -199,7 +209,7 @@ public class Cross extends Node implements ISimEntity {
 		switch (pathSize) {
 		case 1:
 			// on cede le passage a notre gauche
-			if (isLineEmpty((ID + 3) % 4) && isOccupied[(ID + 3) % 4] == null) {
+			if (isLineEmpty((ID + 3) % 4)&& isOccupied[(ID+3)%4]==null) {
 				return true;
 			} else {
 				addLineObserver((ID + 3) % 4, c);
@@ -208,7 +218,7 @@ public class Cross extends Node implements ISimEntity {
 		default:
 			// on cede le passage a gauche et droite (cas ou l'on va tout droit
 			// ou si on tourne a droite)
-			if (isLineEmpty((ID + 3) % 4) && isLineEmpty((ID + 1) % 4) && isOccupied[(ID + 3) % 4] == null) {
+			if (isLineEmpty((ID + 3) % 4) && isLineEmpty((ID + 1) % 4) && isOccupied[(ID+3)%4]==null) {
 				return true;
 			} else {
 				addLineObserver((ID + 3) % 4, c);
