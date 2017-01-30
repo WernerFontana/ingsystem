@@ -149,10 +149,10 @@ public class Cross extends Node implements ISimEntity {
 				return Go(c, p);
 			case 1:// stop : les stops sont par deux
 				c.setAtStop(true);
-					if (!stop(getTypeFromID(ID), ID, c)) {
-						return null;
-					}
-					return Go(c, p);
+				if (!stop(getTypeFromID(ID), ID, c)) {
+					return null;
+				}
+				return Go(c, p);
 			case 2:// feu : les intersections sont toujours pleines de feux
 				// le cas ou l'on tourne a droite est géré au moment ou la
 				// voiture doit tourner et non au debut
@@ -182,8 +182,9 @@ public class Cross extends Node implements ISimEntity {
 
 	public boolean isLineEmpty(int ID) {
 		try {Line l =env.getLine(convertCrossNode(ID));
-			boolean r = l.getCars().getFirst().getArrivalTime().compareTo(engine.getCurrentTime().minusSeconds(l.getLongueur()/14-500))<0;
-			return r;
+		boolean r = l.getCars().getFirst().getArrivalTime().compareTo(engine.getCurrentTime().minusSeconds(l.getLongueur()/14+15))<0;
+		//	System.out.println(r);
+		return r;
 		} catch (NullPointerException e) {
 			return true;// si il n'y a pas de voie existante pas de priorité a
 			// laisser

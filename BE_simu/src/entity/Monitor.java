@@ -19,6 +19,7 @@ public class Monitor {
 		int i=0,k=0;
 		
 		final LocalDateTime startTime = LocalDateTime.of(2017, 1, 1, 0, 0);
+
 		final Duration duration = Duration.ofHours(24);
 		for(i=0;i<500;i++)
 		{
