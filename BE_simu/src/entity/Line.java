@@ -25,6 +25,11 @@ public class Line extends Entity implements ISimEntity {
 	public void addCar(Car c){
 		cars.add(c);
 	}
+	public void removeCar(Car c){
+		cars.remove(c);
+		setChanged();
+		notifyObservers();
+	}
 	
 	public boolean isFull(){
 		double l = 0.0;
@@ -32,8 +37,9 @@ public class Line extends Entity implements ISimEntity {
 			l+= c.longueur;
 			l+= c.distSecu;
 		}
-		if(l > longueur)
-			return true;
+		//System.out.println(l+"   "+longueur);
+		if(l > longueur*2){
+			return true;}
 		else
 			return false;
 	}

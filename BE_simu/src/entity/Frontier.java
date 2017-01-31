@@ -16,7 +16,7 @@ public class Frontier extends Node implements ISimEntity {
 	//Contient la liste des horaires de debut des plages
 	public LinkedList<LocalDateTime> rawTime = new LinkedList<LocalDateTime>();
 	//Contient le nombre de voiture a spawn pour chaque plage
-	private LinkedList<Integer> rawNum = new LinkedList<Integer>();
+	public LinkedList<Integer> rawNum = new LinkedList<Integer>();
 	//Contient l'id d'une frontier et la proba associ� � celle-ci
 	private ArrayList<Integer> rawProba = new ArrayList<Integer>();
 	
@@ -28,11 +28,12 @@ public class Frontier extends Node implements ISimEntity {
 	public Frontier(int ID, BasicSimEngine engine, Environment e) {
 		super(ID, engine, e);
 
+		/*rawNum.add(1000);
 		rawNum.add(1000);
 		rawNum.add(1000);
 		rawNum.add(1000);
-		rawNum.add(1000);
-		rawNum.add(1000);
+		rawNum.add(1000);*/
+		
 
 		engine.scheduleEventIn(this, Duration.ZERO, this::generation);
 	}

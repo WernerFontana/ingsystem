@@ -19,6 +19,7 @@ public class Builder {
 	private DataManager bdd;
 	private BasicSimEngine engine;
 	private Environment env;
+	private boolean log = false;
 
 	public Builder(DataManager bdd, Environment env, BasicSimEngine engine){
 		this.bdd = bdd;
@@ -30,7 +31,8 @@ public class Builder {
 		JSONArray jsonArray;
 		int len;
 		
-		System.out.println("Construction des Frontier ...");
+		if(log)
+			System.out.println("Construction des Frontier ...");
 		jsonArray = bdd.getFrontiers(); 
 		if (jsonArray != null) { 
 		   len = jsonArray.length();
@@ -44,11 +46,16 @@ public class Builder {
 			   for (int j=0;j<t.length;j++)
 				   f.addRawTime(t[j]);
 			   
+			   int freq[] = bdd.getFreq(f.getID());
+			   for (int j=0;j<freq.length;j++)
+				   f.addRawNum(freq[j]);
+			   
 			   env.addNode(f);
 		   } 
 		} 
 		
-		System.out.println("Construction des Cross ...");
+		if(log)
+			System.out.println("Construction des Cross ...");
 		jsonArray = (JSONArray)bdd.getCrosses(); 
 		if (jsonArray != null) { 
 			len = jsonArray.length();
@@ -62,7 +69,8 @@ public class Builder {
 			} 
 		} 
 		
-		System.out.println("Construction des Line ...");
+		if(log)
+			System.out.println("Construction des Line ...");
 		jsonArray = (JSONArray)bdd.getLanes(); 
 		if (jsonArray != null) { 
 			len = jsonArray.length();
@@ -76,7 +84,8 @@ public class Builder {
 		   	} 
 		} 
 		
-		System.out.println("Construction du PathFinder ...");
+		if(log)
+			System.out.println("Construction du PathFinder ...");
 		PathFinder path = env.getPathFinder();
 		env.getNodes().forEach(
 				(id,n) -> path.addLocation(String.valueOf(n.getID()))

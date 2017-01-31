@@ -23,14 +23,14 @@ public class Checker {
 		boolean b = false;
 		for(Line l : env.getLines().values()){
 			if(!l.getCars().isEmpty()){
-				System.out.println("Car in Line : KO");
-				System.out.println(l+"            "+l.getCars().size());
+				//System.out.println("Car in Line : KO");
+				//System.out.println(l+"            "+l.getCars().size());
 				b = true;
 				r = true;
 			}
 		}
 		if(!b)
-			System.out.println("Car in Line : OK");
+			//System.out.println("Car in Line : OK");
 		
 		b = false;
 		for(Node n : env.getNodes().values()){
@@ -43,17 +43,19 @@ public class Checker {
 				}
 			}
 		}
-		if(!b)
-			System.out.println("Car in Cross : OK");
+		if(!b){
+			//System.out.println("Car in Cross : OK");
+		}
 		else{
-			System.out.println("Car in Cross : KO");
+			//System.out.println("Car in Cross : KO");
 			r = true;
 		}
-		if(engine.getEventQueue().isEmpty())
-			System.out.println("Event to process : OK");
+		if(engine.getEventQueue().isEmpty()){
+			//System.out.println("Event to process : OK");
+		}
 		else
 		{
-		System.out.println("Event to process : KO");
+		//System.out.println("Event to process : KO");
 		r=true;
 		}
 		return r;

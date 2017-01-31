@@ -21,7 +21,7 @@ public class Monitor {
 		final LocalDateTime startTime = LocalDateTime.of(2017, 1, 1, 0, 0);
 
 		final Duration duration = Duration.ofHours(24);
-		for(i=0;i<500;i++)
+		for(i=0;i<50000;i++)
 		{
 		BasicSimEngine engine = new BasicSimEngine();
 		engine.getLoggerHub().addLogger(new SysOutLogger());
@@ -44,9 +44,9 @@ public class Monitor {
 			k++;
 			}
 		
-		System.out.println("Date de fin de simulation : "+engine.getCurrentTime());
+		/*System.out.println("Date de fin de simulation : "+engine.getCurrentTime());
 		
-		System.out.println("Durée de simulation : "+Duration.between(debut, LocalDateTime.now()));
+		System.out.println("Durée de simulation : "+Duration.between(debut, LocalDateTime.now()));*/
 		System.err.println(k+"/"+(i+1));
 		//env.getLines().forEach((i,l) -> System.out.println(i+" : "+l.getCars()));
 		

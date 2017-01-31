@@ -43,7 +43,7 @@ public class Car extends Entity implements ISimEntity, Observer {
 		currentLine = path.getFirst();
 		currentIndex = 0;
 		currentLine.addCar(this);
-		currentLine.notifyStop();
+		//currentLine.notifyStop();
 		this.setArrivalTime(engine.getCurrentTime());
 		check();
 
@@ -87,7 +87,7 @@ public class Car extends Entity implements ISimEntity, Observer {
 
 	private void addToNextLine() {
 		isInCross=false;
-		currentLine.getCars().remove(this);
+		currentLine.removeCar(this);
 		currentIndex++;
 		currentLine = path.get(currentIndex);
 		currentLine.addCar(this);
@@ -120,28 +120,29 @@ public class Car extends Entity implements ISimEntity, Observer {
 
 	private void nextIterationOfCross(ISimEngine engine) {
 		setIsCrossing(false);
+
 		try
 		{
 			Cross c = ((Cross) currentLine.getEnd());
 			Car isOccupied[] = c.getIsOccupied();
 			if (behavior == null) {
-				behavior = c.dealWithIt(this);
-				// si le behavior est different de null, on est entrer dans la cross
-				if (behavior != null) {
-					if(currentLine.getCars().size()<=1)
-					{
-						currentLine.setOutFree(true);
+					behavior = c.dealWithIt(this);
+					// si le behavior est different de null, on est entrer dans la cross
+					if (behavior != null) {
+						if(currentLine.getCars().size()<=1)
+						{
+							currentLine.setOutFree(true);
+						}
+						setIsCrossing(true);
+						engine.scheduleEventIn(this, Duration.ofSeconds(timeCross), this::nextIterationOfCross);
+						c.deleteObserver(this);
+						setChanged();
+						notifyObservers();
+						deleteObservers();
+						behaviorSize = behavior.size();
+					} else {
+						c.addObserver(this);
 					}
-					setIsCrossing(true);
-					engine.scheduleEventIn(this, Duration.ofSeconds(timeCross), this::nextIterationOfCross);
-					c.deleteObserver(this);
-					setChanged();
-					notifyObservers();
-					deleteObservers();
-					behaviorSize = behavior.size();
-				} else {
-					c.addObserver(this);
-				}
 			}
 			// la voiture est déjà dans la cross
 			else {
@@ -159,6 +160,7 @@ public class Car extends Entity implements ISimEntity, Observer {
 				}
 				// si la voiture doit sortir
 				else {
+					//System.out.println("ok");
 					c.deleteObserver(this);
 					addToNextLine();
 					c.setIsOccupied(behavior.get(0), null);
@@ -168,9 +170,8 @@ public class Car extends Entity implements ISimEntity, Observer {
 		}
 		catch(ClassCastException e)
 		{
-			
+
 		}
-		
 	}
 
 	public void endTrip() {
@@ -224,7 +225,7 @@ public class Car extends Entity implements ISimEntity, Observer {
 	public void setArrivalTime(LocalDateTime arrivalTime) {
 		this.arrivalTime = arrivalTime;
 	}
-	
+
 	public void setIsCrossing(boolean b)
 	{
 		boolean tmp=isCrossing;
