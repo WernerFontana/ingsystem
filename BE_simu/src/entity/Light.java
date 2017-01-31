@@ -13,6 +13,9 @@ public class Light extends Entity implements ISimEntity {
 	 */
 	public static final int GREEN=0,ORANGE=1,RED=2;
 	private long startTime;
+	private int GREEN_DURATION=30, ORANGE_DURATION=5, PAUSE_DURATION=5, 
+			ONE_TURN_DURATION = GREEN_DURATION + ORANGE_DURATION+PAUSE_DURATION,
+			TOTAL_DURATION =4*ONE_TURN_DURATION;
 	public Light(int id, BasicSimEngine engine, Environment env)
 	{
 		super(id,engine,env);
@@ -25,67 +28,67 @@ public class Light extends Entity implements ISimEntity {
 	}
 	
 	public int getLightByID(int id, Car c)
-		{long time =(convertLocalDateTimeToInt(engine.getCurrentTime())-startTime)%160;
+		{long time =(convertLocalDateTimeToInt(engine.getCurrentTime())-startTime)%TOTAL_DURATION;
 			switch(id)
 			{
 			case 0:
-				if(time>5 && time<=35)
+				if(time>PAUSE_DURATION && time<=PAUSE_DURATION+GREEN_DURATION)
 				{
 					return GREEN;
 				}
-				else if(time>35 && time<=40)
+				else if(time>PAUSE_DURATION+GREEN_DURATION && time<=ONE_TURN_DURATION)
 				{
 					return ORANGE;
 				}
 				else
 				{	
 					c.setAtLight(true);
-					engine.scheduleEventIn(this, Duration.ofSeconds(160-time+6), c::checkNode);
+					engine.scheduleEventIn(this, Duration.ofSeconds(TOTAL_DURATION-time+PAUSE_DURATION+1), c::checkNode);
 					return RED;
 				}
 			case 1:
-				if(time>45 && time<=75)
+				if(time>ONE_TURN_DURATION+PAUSE_DURATION && time<=ONE_TURN_DURATION+PAUSE_DURATION+GREEN_DURATION)
 				{
 					return GREEN;
 				}
-				else if(time>75 && time<=80)
+				else if(time>ONE_TURN_DURATION+PAUSE_DURATION+GREEN_DURATION && time<=2*ONE_TURN_DURATION)
 				{
 					return ORANGE;
 				}
 				else
 				{
 					c.setAtLight(true);
-					engine.scheduleEventIn(this, Duration.ofSeconds(160-time+46), c::checkNode);
+					engine.scheduleEventIn(this, Duration.ofSeconds(TOTAL_DURATION-time+ONE_TURN_DURATION+PAUSE_DURATION+1), c::checkNode);
 					return RED;
 				}
 			case 2:
-				if(time>85 && time<=115)
+				if(time>2*ONE_TURN_DURATION+PAUSE_DURATION && time<=2*ONE_TURN_DURATION+PAUSE_DURATION+GREEN_DURATION)
 				{
 					return GREEN;
 				}
-				else if(time>115 && time<=120)
+				else if(time>2*ONE_TURN_DURATION+PAUSE_DURATION+GREEN_DURATION && time<=3*ONE_TURN_DURATION)
 				{
 					return ORANGE;
 				}
 				else
 				{
 					c.setAtLight(true);
-					engine.scheduleEventIn(this, Duration.ofSeconds(160-time+86), c::checkNode);
+					engine.scheduleEventIn(this, Duration.ofSeconds(TOTAL_DURATION-time+2*ONE_TURN_DURATION+PAUSE_DURATION+1), c::checkNode);
 					return RED;
 				}
 			case 3:
-				if(time>125 && time<=155)
+				if(time>3*ONE_TURN_DURATION+PAUSE_DURATION && time<=3*ONE_TURN_DURATION+PAUSE_DURATION+GREEN_DURATION)
 				{
 					return GREEN;
 				}
-				else if(time>155 && time<=160)
+				else if(time>3*ONE_TURN_DURATION+PAUSE_DURATION+GREEN_DURATION && time<=4*ONE_TURN_DURATION)
 				{
 					return ORANGE;
 				}
 				else
 				{
 					c.setAtLight(true);
-					engine.scheduleEventIn(this, Duration.ofSeconds(160-time+126), c::checkNode);
+					engine.scheduleEventIn(this, Duration.ofSeconds(TOTAL_DURATION-time+3*ONE_TURN_DURATION+PAUSE_DURATION+1), c::checkNode);
 					return RED;
 				}
 			}
