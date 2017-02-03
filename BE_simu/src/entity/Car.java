@@ -44,6 +44,9 @@ public class Car extends Entity implements ISimEntity, Observer {
 		currentLine = path.getFirst();
 		currentIndex = 0;
 		currentLine.addCar(this);
+		
+		env.freqLine[currentLine.getID()-12]++;
+		
 		//currentLine.notifyStop();
 		this.setArrivalTime(engine.getCurrentTime());
 		check();
@@ -92,6 +95,7 @@ public class Car extends Entity implements ISimEntity, Observer {
 		currentIndex++;
 		currentLine = path.get(currentIndex);
 		currentLine.addCar(this);
+		env.freqLine[currentLine.getID()-12]++;
 		this.setArrivalTime(engine.getCurrentTime());
 		check();
 	}

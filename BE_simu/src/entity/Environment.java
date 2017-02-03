@@ -18,6 +18,7 @@ public class Environment {
 	
 	public long[][][] tpsTrajet = new long[2][7][7];
 	public long[] freqCross = new long[4];
+	public long[] freqLine = new long[20];
 
 	public Environment()
 	{
@@ -41,6 +42,10 @@ public class Environment {
 		
 		for (int i = 0; i < freqCross.length; i++) {
 			freqCross[i] = 0;
+		}
+		
+		for (int i = 0; i < freqLine.length; i++) {
+			freqLine[i] = 0;
 		}
 	}
 

@@ -32,9 +32,12 @@ public class Monitor {
 		final Duration duration = Duration.ofHours(24);
 		
 		long[][] tpsMoy = new long[7][7];
-		long[] freqMoy = new long[4];
+		long[] freqCMoy = new long[4];
+		long[] freqLMoy = new long[20];
 		
-		for(i=0;i<5;i++)
+		int nbIter = 10;
+		
+		for(i=0;i<nbIter;i++)
 		{
 			BasicSimEngine engine = new BasicSimEngine();
 			engine.getLoggerHub().addLogger(new SysOutLogger());
@@ -82,26 +85,45 @@ public class Monitor {
 			}
 			
 			for (int m = 0; m < env.freqCross.length; m++) {
-				freqMoy[m] += env.freqCross[m];
+				freqCMoy[m] += env.freqCross[m];
+			}
+			
+			for (int m = 0; m < env.freqLine.length; m++) {
+				freqLMoy[m] += env.freqLine[m];
 			}
 		}
 		
 		WritableWorkbook fic = null;
 		fic = Workbook.createWorkbook(new File("log.xls"));
 		WritableSheet tps = fic.createSheet("Temps de trajet", 0);
-		WritableSheet freq = fic.createSheet("Fréquentation des croisements", 1);
+		WritableSheet freqC = fic.createSheet("Fréquentation des croisements", 1);
+		WritableSheet freqL = fic.createSheet("Fréquentation des voies", 2);
 		
 		for (int p = 0; p < tpsMoy.length; p++) {
+			Label lb1 = new Label(0, p+1, Integer.toString(p+1));
+			Label lb2 = new Label(p+1, 0, Integer.toString(p+1));
+			tps.addCell(lb1);
+			tps.addCell(lb2);
 			for (int q = 0; q < tpsMoy[0].length; q++) {
-				Label l = new Label(p, q, Long.toString(tpsMoy[p][q] / 5));
+				Label l = new Label(p+1, q+1, Long.toString(tpsMoy[p][q] / nbIter));
 				tps.addCell(l);
 			}
 		}
 		
-		for (int p = 0; p < freqMoy.length; p++) {
-			Label l = new Label(p, 0, Long.toString(freqMoy[p] / 5));
-			freq.addCell(l);
+		for (int p = 0; p < freqCMoy.length; p++) {
+			Label lb = new Label(p, 0, Integer.toString(p+8));
+			Label l = new Label(p, 1, Long.toString(freqCMoy[p] / nbIter));
+			freqC.addCell(lb);
+			freqC.addCell(l);
 		}
+		
+		for (int p = 0; p < freqLMoy.length; p++) {
+			Label lb = new Label(p, 0, Integer.toString(p+12));
+			Label l = new Label(p, 1, Long.toString(freqLMoy[p] / nbIter));
+			freqL.addCell(lb);
+			freqL.addCell(l);
+		}
+
 		fic.write();
 		fic.close();
 	}
