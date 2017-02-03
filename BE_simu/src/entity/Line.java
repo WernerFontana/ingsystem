@@ -7,6 +7,7 @@ import engine.impl.BasicSimEngine;
 
 public class Line extends Entity implements ISimEntity {
 
+	//Liste de toutes les voitures présentes sur la ligne
 	private LinkedList<Car> cars;
 	private int longueur;
 	public final double largeur = 3;
@@ -30,7 +31,10 @@ public class Line extends Entity implements ISimEntity {
 		setChanged();
 		notifyObservers();
 	}
-	
+	/**
+	 * Permet de savoir si la ligne est pleine(bouchée)
+	 * @return
+	 */
 	public boolean isFull(){
 		double l = 0.0;
 		for(Car c : cars){

@@ -10,9 +10,12 @@ import engine.impl.BasicSimEngine;
 
 public class Cross extends Node implements ISimEntity {
 
+	//Tableau représentant l'intersection
 	private Car isOccupied[] = new Car[4];
+	//Represente chaque E/S de la Cross
 	private final CrossEntry top, right, bottom, left;
 
+	//Contient la liste des voitures à update lors d'un mouvement dans l'intersection
 	private LinkedList<Car> updateList = new LinkedList<>();
 	public final int NONE = 0, STOP = 1, FEU = 2;
 	private Light light;
@@ -56,6 +59,13 @@ public class Cross extends Node implements ISimEntity {
 		}*/
 	}
 
+	/**
+	 * Méthode permettant de déplacer une voiture dans l'intersection,
+	 * vérifie toutes les possiblités et gère les collisions
+	 * @param i
+	 * @param c
+	 * @return
+	 */
 	public boolean setIsOccupied(int i, Car c) {
 		if (c != null) {
 			if (isOccupied[i] == null) {
@@ -79,12 +89,21 @@ public class Cross extends Node implements ISimEntity {
 		}
 	}
 
+	/**
+	 * Méthode permmettant de limiter l'imbriquation d'update entre les objets
+	 * @param engine
+	 */
 	public void updateEvent(ISimEngine engine) {
 		setChanged();
 		notifyObservers(updateList.getFirst());
 		updateList.removeFirst();
 	}
 
+	/**
+	 * Pour éviter de bloquer l'intersection, seul 3 voitures sont autorisées à s'engager dans la Cross
+	 * 
+	 * @return true si moins de 3 voitures dans la Cross
+	 */
 	private boolean isAvailable() {
 		int c = 0;
 		for (int i = 0; i < isOccupied.length; i++) {
@@ -148,6 +167,11 @@ public class Cross extends Node implements ISimEntity {
 		}
 	}
 
+	/**
+	 * Ajuste le comportement de la voiture en fonction de la règle à appliquer(rien, stop, feu)
+	 * @param c
+	 * @return
+	 */
 	public LinkedList<Integer> dealWithIt(Car c) {
 		int pathType;
 		int ID = convertNodeCross(c.getCurrentLine().getID());
@@ -266,6 +290,11 @@ public class Cross extends Node implements ISimEntity {
 		return -1;
 	}
 
+	/**
+	 * Permet de déterminer le chemin à parcourir dans l'intersection pour chaque voiture en fonction de la position de départ et d'arrivée
+	 * @param c
+	 * @return
+	 */
 	public LinkedList<Integer> getBehavior(Car c) {
 		LinkedList<Integer> l = new LinkedList<>();
 		if (c.getCurrentLine().getID() == top.in()) {

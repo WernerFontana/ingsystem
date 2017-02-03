@@ -75,6 +75,7 @@ public class Monitor {
 			//Fermeture du fichier de conf
 			Prop.self.close();
 			
+			//Génération des statistiques
 			for (int m = 0; m < env.tpsTrajet[0].length; m++) {
 				for (int n = 0; n < env.tpsTrajet[0][0].length; n++) {
 					if (env.tpsTrajet[1][m][n] != 0) {

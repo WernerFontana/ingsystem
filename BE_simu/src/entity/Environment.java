@@ -7,7 +7,9 @@ import algo.algo.PathFinder;
 import utils.SortedList;
 
 public class Environment {
+	//Contient toutes les lignes de la simulation
 	private HashMap<Integer,Line> lineList;
+	//Contient tout les noeuds(Cross et Frontier)
 	private HashMap<Integer,Node> nodeList;
 
 	private int nbCarGen = 0;

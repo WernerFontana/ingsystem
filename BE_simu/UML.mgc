@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <Class name="entity.Car" x="799" y="130">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="entity.Entity"/>
+        <Association destinationClassName="entity.Frontier"
+            endpointName="begin" kind="Simple"/>
+        <Association destinationClassName="entity.Line"
+            endpointName="currentLine" kind="Simple"/>
+        <Communication destinationClassName="entity.Entity"/>
+        <Communication destinationClassName="entity.Cross"/>
+        <Communication destinationClassName="entity.Environment"/>
+        <Communication destinationClassName="entity.Line"/>
+    </Class>
+    <Class name="entity.Entity" x="607" y="35">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association destinationClassName="entity.Environment"
+            endpointName="env" kind="Simple"/>
+    </Class>
+    <Class name="entity.Cross" x="400" y="263">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="entity.Node"/>
+        <Association destinationClassName="entity.Car"
+            endpointName="isOccupied[]" kind="Simple"/>
+        <Communication destinationClassName="entity.Car"/>
+        <Communication destinationClassName="entity.Entity"/>
+        <Communication destinationClassName="entity.Environment"/>
+    </Class>
+    <Class name="entity.Frontier" x="110" y="171">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="entity.Node"/>
+        <Communication destinationClassName="entity.Environment"/>
+    </Class>
+    <Class name="entity.Node" x="235" y="17">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="entity.Entity"/>
+        <Association destinationClassName="entity.Line"
+            endpointName="lines" kind="Simple"/>
+    </Class>
+    <Class name="entity.Environment" x="476" y="-165">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association destinationClassName="entity.Line"
+            endpointName="lineList" kind="Simple"/>
+        <Association destinationClassName="entity.Node"
+            endpointName="nodeList" kind="Simple"/>
+    </Class>
+    <Class name="entity.Line" x="414" y="78">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="entity.Entity"/>
+        <Association destinationClassName="entity.Node"
+            endpointName="begin" kind="Simple"/>
+        <Communication destinationClassName="entity.Entity"/>
+    </Class>
+</ClassDiagram>

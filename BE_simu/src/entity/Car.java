@@ -14,18 +14,25 @@ public class Car extends Entity implements ISimEntity, Observer {
 
 	public double longueur;
 	public double distSecu;
+	//La frontière de début et de fin de la voiture
 	private Frontier begin, end;
+	//La liste de ligne a parcourir pour atteindre la destination
 	private LinkedList<Line> path;
+	//La ligne sur laquelle se trouve la voiture
 	private Line currentLine;
+	//L'index courant, correspond au numéro de la ligne sur laquelle est la voiture dans la liste "path"
 	private int currentIndex;
 	private int behaviorSize;
 	private LocalDateTime arrivalTime;
 	private LocalDateTime debutDuTemps;
 	private boolean atLight = false, isCrossing = false, atStop = false, isInCross = false,waitJamEnd=false;
 
+	//Contient le chemin à effectuer dans une intersection, correspond aux numéro des cases a parcourir dans la Cross
 	private LinkedList<Integer> behavior;
 
+	//La vitesse des voitures
 	public final int vitesse = 50;
+	//Le temps que met une voiture pour traverser une case d'une intersection
 	private final int timeCross = 3;
 
 	public Car(int id, BasicSimEngine engine, Environment env, double l, double d, Frontier begin, Frontier end) {
@@ -35,6 +42,7 @@ public class Car extends Entity implements ISimEntity, Observer {
 		this.begin = begin;
 		this.end = end;
 		path = new LinkedList<>();
+		//Remplissage du path avec les lignes issue de l'algo du plus court chemin
 		for (int pathID : env.getPathFinder().execute(begin.getID() - 1, end.getID() - 1)) {
 			path.add(env.getLine(pathID));
 		}
@@ -54,7 +62,9 @@ public class Car extends Entity implements ISimEntity, Observer {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
+		//Si la voiture n'est pas en train de bouger dans une intersection
 		if (!isCrossing) {
+			//Si l'update viens d'une Cross et que on ne s'update pas soi-même
 			if (arg0 instanceof Cross) {
 				if (arg1 instanceof Car) {
 					if (((Car) arg1).getID() != this.getID()) {
@@ -62,15 +72,18 @@ public class Car extends Entity implements ISimEntity, Observer {
 							checkNode(engine);
 					}
 				}
+				//Update par une voiture, cela veut dire que la voiture peut accéder à l'intersection
 			} else if (arg0 instanceof Car) {
 				if (!atLight && !atStop) {
 					arrivalTime = engine.getCurrentTime();
 					engine.scheduleEventIn(this, Duration.ofSeconds((long) (longueur + distSecu) / 14),
 							this::checkNode);
 				}
+				//Update par une ligne, utile pour les stop
 			} else if (arg0 instanceof Line) {
 				if (!atLight && atStop || waitJamEnd)
 					checkNode(engine);
+				//Update d'un feu, changement de feu vert
 			} else if (arg0 instanceof Light) {
 				if (atLight && !atStop)
 					checkNode(engine);
@@ -86,6 +99,10 @@ public class Car extends Entity implements ISimEntity, Observer {
 		this.atStop = atStop;
 	}
 
+	/**
+	 * Méthode de transfère d'une voiture d'une ligne à la suivante d'après le path,
+	 * actualise toutes les variables en conséquence
+	 */
 	private void addToNextLine() {
 		isInCross = false;
 		currentLine.removeCar(this);
@@ -97,17 +114,30 @@ public class Car extends Entity implements ISimEntity, Observer {
 		check();
 	}
 
+	/**
+	 * Méthode appelé en entrée sur une ligne
+	 */
 	public void check() {
+		//Si la voiture est seule sur sa ligne
 		if (currentLine.getCars().size() == 1 && currentLine.getCars().getFirst().getID() == this.getID()) {
 			engine.scheduleEventIn(this, Duration.ofSeconds(currentLine.getLongueur() / 14), this::checkNode);
-		} else if (currentLine.getCars().size() == 2 && currentLine.getCars().getFirst().behavior != null) {
+		} 
+		//Si il y a une voiture dans l'intersection en bout de ligne, celle ci est toujours présente dans la liste de voitures de la ligne également
+		//En réalité, la voiture est toute seule sur sa ligne
+		else if (currentLine.getCars().size() == 2 && currentLine.getCars().getFirst().behavior != null) {
 			engine.scheduleEventIn(this, Duration.ofSeconds(currentLine.getLongueur() / 14), this::checkNode);
-		} else {
+		} 
+		//Sinon on observe la voiture qui précède
+		else {
 			int l = currentLine.getCars().size();
 			((Car) currentLine.getCars().get(l - 2)).addObserver(this);
 		}
 	}
 
+	/**
+	 * Aiguille la voiture si elle doit traverser une intersection en fin de ligne ou si elle arrive à destination
+	 * @param engine
+	 */
 	public void checkNode(ISimEngine engine) {
 		currentLine.setOutFree(false);
 		if (currentLine.getEnd() instanceof Cross) {
@@ -118,18 +148,24 @@ public class Car extends Entity implements ISimEntity, Observer {
 		}
 	}
 
+	/**
+	 * Gère la traversée d'une intersection
+	 * @param engine
+	 */
 	private void nextIterationOfCross(ISimEngine engine) {
 		setIsCrossing(false);
 
 		try {
 			Cross c = ((Cross) currentLine.getEnd());
+			//Récupération de l'état actuel de l'intersection
 			Car isOccupied[] = c.getIsOccupied();
 			if (!path.get(currentIndex + 1).isFull()) {
 				waitJamEnd=false;
+				//Si le behavior est null, on souhaite entrer dans l'intersection
 				if (behavior == null) {
+					//Récupération du chemin à suivre si il est possible d'entrer
 					behavior = c.dealWithIt(this);
-					// si le behavior est different de null, on est entrer dans
-					// la cross
+					// si le behavior est different de null, on est entrer dans la cross
 					if (behavior != null) {
 						env.freqCross[c.getID() - 8]++;
 						if (currentLine.getCars().size() <= 1) {
@@ -138,15 +174,18 @@ public class Car extends Entity implements ISimEntity, Observer {
 						setIsCrossing(true);
 						engine.scheduleEventIn(this, Duration.ofSeconds(timeCross), this::nextIterationOfCross);
 						c.deleteObserver(this);
+						//On previent la voiture suivante dans la ligne qu'on s'est engagé et qu'elle peut donc avancé
 						setChanged();
 						notifyObservers();
 						deleteObservers();
 						behaviorSize = behavior.size();
-					} else {
+					} 
+					//sinon on attend un mouvement dans l'intersection pour re-tester
+					else {
 						c.addObserver(this);
 					}
 				}
-				// la voiture est dï¿½jï¿½ dans la cross
+				// la voiture est déjà dans la cross
 				else {
 					// si la voiture doit encore parcourir l'intersection
 					if (!behavior.isEmpty() && behavior.size() > 1) {
@@ -163,7 +202,6 @@ public class Car extends Entity implements ISimEntity, Observer {
 					}
 					// si la voiture doit sortir
 					else {
-						// System.out.println("ok");
 						c.deleteObserver(this);
 						addToNextLine();
 						c.setIsOccupied(behavior.get(0), null);
@@ -181,6 +219,10 @@ public class Car extends Entity implements ISimEntity, Observer {
 		}
 	}
 
+	/**
+	 * Méthode de fin de trajet pour la voiture,
+	 * La voiture est supprimé, les observateurs notifiés, et les stats calculés
+	 */
 	public void endTrip() {
 
 		env.tpsTrajet[0][begin.getID() - 1][end.getID() - 1] += Duration
