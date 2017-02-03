@@ -32,17 +32,27 @@ public class Cross extends Node implements ISimEntity {
 		light = new Light(id, engine, env);
 	}
 
-	public void tryPassing(int i, Car c, int pathSize) {
-		setIsOccupied(i, c);
-		/*
-		if ((pathSize == 3) && (getTypeFromID(i) == NONE)) {
-			if (this.isLineEmpty(i)) {
-				setIsOccupied(i, c);
+	public boolean tryPassing(int i, Car c) {
+		return setIsOccupied(i, c);
+		/*if ((getTypeFromID(i) == NONE)) {
+			if (this.isLineEmpty(i)) {				
+				if(!setIsOccupied(i, c))
+					{
+					c.setAtStop(true);
+					this.addObserver(c);
+					this.addLineObserver(i, c);
+					return false;
+					}
+				return true;
 			} else {
+				c.setAtStop(true);
 				this.addLineObserver(i, c);
+				this.addObserver(c);
+				return false;
 			}
 		} else {
 			setIsOccupied(i, c);
+			return true;
 		}*/
 	}
 
@@ -182,7 +192,7 @@ public class Cross extends Node implements ISimEntity {
 
 	public boolean isLineEmpty(int ID) {
 		try {Line l =env.getLine(convertCrossNode(ID));
-		boolean r = l.getCars().getFirst().getArrivalTime().compareTo(engine.getCurrentTime().minusSeconds(l.getLongueur()/14+15))<0;
+		boolean r = l.getCars().getFirst().getArrivalTime().compareTo(engine.getCurrentTime().minusSeconds(l.getLongueur()/14-15))<0;
 		//	System.out.println(r);
 		return r;
 		} catch (NullPointerException e) {

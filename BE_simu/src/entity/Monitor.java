@@ -37,8 +37,7 @@ public class Monitor {
 		
 		int nbIter = 10;
 		
-		for(i=0;i<nbIter;i++)
-		{
+		for(i=0;i<nbIter;i++) {
 			BasicSimEngine engine = new BasicSimEngine();
 			engine.getLoggerHub().addLogger(new SysOutLogger());
 			engine.initialize(startTime,duration);
