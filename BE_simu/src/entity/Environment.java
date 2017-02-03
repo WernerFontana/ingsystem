@@ -15,6 +15,9 @@ public class Environment {
 	private Duration minTripTime, moyTripTime, maxTripTime;
 	private PathFinder path;
 	public SortedList<Duration> tripTimeList;
+	
+	public long[][][] tpsTrajet = new long[2][7][7];
+	public long[] freqCross = new long[4];
 
 	public Environment()
 	{
@@ -23,10 +26,22 @@ public class Environment {
 		tripTimeList.add(Duration.ofHours(51));
 		tripTimeList.add(Duration.ofHours(5));
 
-		lineList =new HashMap<>();
+		lineList = new HashMap<>();
 		nodeList = new HashMap<>();
 
 		path = new PathFinder();
+		
+		for (int i = 0; i < tpsTrajet.length; i++) {
+			for (int j = 0; j < tpsTrajet[0].length; j++) {
+				for (int k = 0; k < tpsTrajet[0][0].length; k++) {
+					tpsTrajet[i][j][k] = 0;
+				}
+			}
+		}
+		
+		for (int i = 0; i < freqCross.length; i++) {
+			freqCross[i] = 0;
+		}
 	}
 
 	public void addLine(Line line)

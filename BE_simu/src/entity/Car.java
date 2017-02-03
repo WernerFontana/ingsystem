@@ -22,6 +22,7 @@ public class Car extends Entity implements ISimEntity, Observer {
 	private int currentIndex;
 	private int behaviorSize;
 	private LocalDateTime arrivalTime;
+	private LocalDateTime debutDuTemps;
 	private boolean atLight = false, isCrossing = false, atStop = false, isInCross=false;
 
 	private LinkedList<Integer> behavior;
@@ -97,10 +98,8 @@ public class Car extends Entity implements ISimEntity, Observer {
 
 	public void check() {
 		if (currentLine.getCars().size() == 1 && currentLine.getCars().getFirst().getID() == this.getID()) {
-
 			engine.scheduleEventIn(this, Duration.ofSeconds(currentLine.getLongueur() / 14), this::checkNode);
 		} else if (currentLine.getCars().size() == 2 && currentLine.getCars().getFirst().behavior != null) {
-
 			engine.scheduleEventIn(this, Duration.ofSeconds(currentLine.getLongueur() / 14), this::checkNode);
 		} else {
 			int l = currentLine.getCars().size();
@@ -129,6 +128,7 @@ public class Car extends Entity implements ISimEntity, Observer {
 					behavior = c.dealWithIt(this);
 					// si le behavior est different de null, on est entrer dans la cross
 					if (behavior != null) {
+						env.freqCross[c.getID()-8]++;
 						if(currentLine.getCars().size()<=1)
 						{
 							currentLine.setOutFree(true);
@@ -144,7 +144,7 @@ public class Car extends Entity implements ISimEntity, Observer {
 						c.addObserver(this);
 					}
 			}
-			// la voiture est déjà dans la cross
+			// la voiture est dï¿½jï¿½ dans la cross
 			else {
 				// si la voiture doit encore parcourir l'intersection
 				if (!behavior.isEmpty() && behavior.size() > 1) {
@@ -175,6 +175,10 @@ public class Car extends Entity implements ISimEntity, Observer {
 	}
 
 	public void endTrip() {
+		
+		env.tpsTrajet[0][begin.getID()-1][end.getID()-1] += Duration.between(this.debutDuTemps, engine.getCurrentTime()).getSeconds();
+		env.tpsTrajet[1][begin.getID()-1][end.getID()-1]++;
+		
 		currentLine.getCars().remove(this);
 		setChanged();
 		notifyObservers();
@@ -224,6 +228,7 @@ public class Car extends Entity implements ISimEntity, Observer {
 
 	public void setArrivalTime(LocalDateTime arrivalTime) {
 		this.arrivalTime = arrivalTime;
+		this.debutDuTemps = arrivalTime;
 	}
 
 	public void setIsCrossing(boolean b)
