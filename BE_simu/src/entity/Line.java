@@ -75,7 +75,7 @@ public class Line extends Entity implements ISimEntity {
 	{
 		this.outFree=b;
 		this.setChanged();
-		this.notifyObservers();		
+		if(b) this.notifyObservers();		
 	}
 	
 	public void notifyStop()

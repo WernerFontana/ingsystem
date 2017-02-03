@@ -2,9 +2,7 @@ package entity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -23,7 +21,7 @@ public class Car extends Entity implements ISimEntity, Observer {
 	private int behaviorSize;
 	private LocalDateTime arrivalTime;
 	private LocalDateTime debutDuTemps;
-	private boolean atLight = false, isCrossing = false, atStop = false, isInCross=false;
+	private boolean atLight = false, isCrossing = false, atStop = false, isInCross = false,waitJamEnd=false;
 
 	private LinkedList<Integer> behavior;
 
@@ -44,7 +42,6 @@ public class Car extends Entity implements ISimEntity, Observer {
 		currentLine = path.getFirst();
 		currentIndex = 0;
 		currentLine.addCar(this);
-		//currentLine.notifyStop();
 		this.setArrivalTime(engine.getCurrentTime());
 		check();
 
@@ -64,12 +61,12 @@ public class Car extends Entity implements ISimEntity, Observer {
 				}
 			} else if (arg0 instanceof Car) {
 				if (!atLight && !atStop) {
-					arrivalTime=engine.getCurrentTime();
+					arrivalTime = engine.getCurrentTime();
 					engine.scheduleEventIn(this, Duration.ofSeconds((long) (longueur + distSecu) / 14),
 							this::checkNode);
 				}
 			} else if (arg0 instanceof Line) {
-				if (!atLight && atStop)
+				if (!atLight && atStop || waitJamEnd)
 					checkNode(engine);
 			} else if (arg0 instanceof Light) {
 				if (atLight && !atStop)
@@ -87,7 +84,7 @@ public class Car extends Entity implements ISimEntity, Observer {
 	}
 
 	private void addToNextLine() {
-		isInCross=false;
+		isInCross = false;
 		currentLine.removeCar(this);
 		currentIndex++;
 		currentLine = path.get(currentIndex);
@@ -110,7 +107,7 @@ public class Car extends Entity implements ISimEntity, Observer {
 	public void checkNode(ISimEngine engine) {
 		currentLine.setOutFree(false);
 		if (currentLine.getEnd() instanceof Cross) {
-			isInCross=true;
+			isInCross = true;
 			nextIterationOfCross(engine);
 		} else if (currentLine.getEnd() instanceof Frontier) {
 			endTrip();
@@ -120,17 +117,18 @@ public class Car extends Entity implements ISimEntity, Observer {
 	private void nextIterationOfCross(ISimEngine engine) {
 		setIsCrossing(false);
 
-		try
-		{
+		try {
 			Cross c = ((Cross) currentLine.getEnd());
 			Car isOccupied[] = c.getIsOccupied();
-			if (behavior == null) {
+			if (!path.get(currentIndex + 1).isFull()) {
+				waitJamEnd=false;
+				if (behavior == null) {
 					behavior = c.dealWithIt(this);
-					// si le behavior est different de null, on est entrer dans la cross
+					// si le behavior est different de null, on est entrer dans
+					// la cross
 					if (behavior != null) {
-						env.freqCross[c.getID()-8]++;
-						if(currentLine.getCars().size()<=1)
-						{
+						env.freqCross[c.getID() - 8]++;
+						if (currentLine.getCars().size() <= 1) {
 							currentLine.setOutFree(true);
 						}
 						setIsCrossing(true);
@@ -143,42 +141,48 @@ public class Car extends Entity implements ISimEntity, Observer {
 					} else {
 						c.addObserver(this);
 					}
-			}
-			// la voiture est d�j� dans la cross
-			else {
-				// si la voiture doit encore parcourir l'intersection
-				if (!behavior.isEmpty() && behavior.size() > 1) {
-					if (isOccupied[behavior.get(1)] == null) {
-						setIsCrossing(true);
+				}
+				// la voiture est d�j� dans la cross
+				else {
+					// si la voiture doit encore parcourir l'intersection
+					if (!behavior.isEmpty() && behavior.size() > 1) {
+						if (isOccupied[behavior.get(1)] == null) {
+							if(c.tryPassing(behavior.get(1), this)){
+								c.deleteObserver(this);
+								setIsCrossing(true);
+								behavior.removeFirst();
+								engine.scheduleEventIn(this, Duration.ofSeconds(timeCross), this::nextIterationOfCross);
+							}							
+						} else {
+							c.addObserver(this);
+						}
+					}
+					// si la voiture doit sortir
+					else {
+						// System.out.println("ok");
 						c.deleteObserver(this);
-						c.tryPassing(behavior.get(1), this, behaviorSize);
-						behavior.removeFirst();
-						engine.scheduleEventIn(this, Duration.ofSeconds(timeCross), this::nextIterationOfCross);
-					} else {
-						c.addObserver(this);
+						addToNextLine();
+						c.setIsOccupied(behavior.get(0), null);
+						behavior = null;
 					}
 				}
-				// si la voiture doit sortir
-				else {
-					//System.out.println("ok");
-					c.deleteObserver(this);
-					addToNextLine();
-					c.setIsOccupied(behavior.get(0), null);
-					behavior = null;
-				}
-			}	
-		}
-		catch(ClassCastException e)
-		{
-
+			}
+			else
+			{
+				waitJamEnd =true;
+				path.get(currentIndex+1).addObserver(this);
+				c.addObserver(this);
+			}
+		} catch (ClassCastException e) {
 		}
 	}
 
 	public void endTrip() {
-		
-		env.tpsTrajet[0][begin.getID()-1][end.getID()-1] += Duration.between(this.debutDuTemps, engine.getCurrentTime()).getSeconds();
-		env.tpsTrajet[1][begin.getID()-1][end.getID()-1]++;
-		
+
+		env.tpsTrajet[0][begin.getID() - 1][end.getID() - 1] += Duration
+				.between(this.debutDuTemps, engine.getCurrentTime()).getSeconds();
+		env.tpsTrajet[1][begin.getID() - 1][end.getID() - 1]++;
+
 		currentLine.getCars().remove(this);
 		setChanged();
 		notifyObservers();
@@ -231,10 +235,9 @@ public class Car extends Entity implements ISimEntity, Observer {
 		this.debutDuTemps = arrivalTime;
 	}
 
-	public void setIsCrossing(boolean b)
-	{
-		boolean tmp=isCrossing;
-		isCrossing=b;
+	public void setIsCrossing(boolean b) {
+		boolean tmp = isCrossing;
+		isCrossing = b;
 	}
 
 }

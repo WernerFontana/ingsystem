@@ -34,7 +34,7 @@ public class Monitor {
 		long[][] tpsMoy = new long[7][7];
 		long[] freqMoy = new long[4];
 		
-		for(i=0;i<5;i++)
+		for(i=0;i<50;i++)
 		{
 			BasicSimEngine engine = new BasicSimEngine();
 			engine.getLoggerHub().addLogger(new SysOutLogger());
